@@ -1,0 +1,40 @@
+<template>
+  <div :class="[post.unfinished ? 'unfinished' : '', 'post']">
+    <h3>
+      <b>{{ post.book }}</b>
+      <i class="fas fa-times"></i>
+    </h3>
+    <h4>by {{ post.author }}</h4>
+    <h4 v-if="post.reviewer">Reviewer: {{ post.reviewer }}, Review Date: {{ post.date }}</h4>
+    <p>{{ post.review }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Post',
+  props: {
+    post: Object,
+  }
+}
+</script>
+
+<style scoped>
+.fas {
+  color: red;
+}
+.post {
+  background: #f4f4f4;
+  margin: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+.post.unfinished {
+  border-left: 5px solid green;
+}
+.post h3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+</style>
