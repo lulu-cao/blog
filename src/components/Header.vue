@@ -1,7 +1,11 @@
 <template>
   <header>
     <h1>{{ title }}</h1>
-    <Button text="Add a Post" color="green" />
+    <Button 
+      @btn-click="$emit('toggle-add-post')" 
+      :text="showAddPost ? 'Close' : 'Add a Post'" 
+      :color="showAddPost ? 'red' : 'green'" 
+    />
   </header>
 </template>
 
@@ -12,6 +16,7 @@ export default {
   name: 'Header',
   props: {
     title: String,
+    showAddPost: Boolean,
   },
   components: {
     Button,

@@ -1,8 +1,8 @@
 <template>
-  <div :class="[post.unfinished ? 'unfinished' : '', 'post']">
+  <div @dblclick="$emit('toggle-status', post.id)" :class="[post.unfinished ? 'unfinished' : '', 'post']">
     <h3>
       <b>{{ post.book }}</b>
-      <i class="fas fa-times"></i>
+      <i @click="onDelete(post.id)" class="fas fa-times"></i>
     </h3>
     <h4>by {{ post.author }}</h4>
     <h4 v-if="post.reviewer">Reviewer: {{ post.reviewer }}, Review Date: {{ post.date }}</h4>
@@ -15,7 +15,12 @@ export default {
   name: 'Post',
   props: {
     post: Object,
-  }
+  },
+  methods: {
+    onDelete(id) {
+      this.$emit('delete-post', id)
+    }
+  },
 }
 </script>
 

@@ -1,6 +1,6 @@
 # blog
 
-A beginner Vue project with traditional Options API. Credits to [Traversy Media](https://www.youtube.com/watch?v=qZXt1Aom3Cs&t=4920s) for some starter code. 
+A beginner Vue project with traditional Options API. Credits to [Traversy Media](https://www.youtube.com/watch?v=qZXt1Aom3Cs&t=4920s) for some starter code and tutorial. 
 
 ## Project setup
 ```

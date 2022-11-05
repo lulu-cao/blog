@@ -1,6 +1,6 @@
 <template>
   <div :key="post.id" v-for="post in posts">
-    <Post :post="post" />
+    <Post @toggle-status="$emit('toggle-status', post.id)" @delete-post="$emit('delete-post', post.id)" :post="post" />
   </div>
 </template>
 
@@ -14,6 +14,7 @@ import Post from './Post'
     },
     components: {
       Post
-    }
+    },
+    emits: ['delete-post', 'toggle-status'],
   }
 </script>

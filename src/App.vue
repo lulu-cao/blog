@@ -1,23 +1,50 @@
 <template>
   <div class="container">
-    <Header title="Lulu and Ian's Blog"/>
-    <Posts :posts="posts"/>
+    <Header title="Lulu and Ian's Blog" @toggle-add-post="toggleAddPost" :showAddPost="showAddPost" />
+    <div v-if="showAddPost">
+      <AddPost @add-post="addPost" />
+    </div>
+    <Posts @toggle-status="toggleStatus" @delete-post="deletePost" :posts="posts"/>
   </div>
 </template>
 
 <script>
 import Header from './components/Header.vue'
 import Posts from './components/Posts.vue'
+import AddPost from './components/AddPost.vue'
 
 export default {
   name: 'App',
   components: {
     Header,
-    Posts
+    Posts,
+    AddPost,
   },
   data() {
     return {
-      posts: []
+      posts: [],
+      showAddPost: false
+    }
+  },
+  methods: {
+    deletePost(id) {
+      if(confirm('Are you sure?')) {
+        this.posts = this.posts.filter((post) => post.id !== id)
+      }
+    },
+    addPost(post) {
+      this.posts = [...this.posts, post]
+    },
+    toggleAddPost() {
+      this.showAddPost = !this.showAddPost
+    },
+    toggleStatus(id) { // this part doesn't work yet
+      console.log("toggling")
+      // this.posts = this.posts.map((post) => { 
+      //   post.id === id ? post.unfinished = !post.unfinished : post })
+      this.posts = this.posts.map((post) => { 
+        post.id === id ? { ...post, unfinished: !post.unfinished } : post }
+      )
     }
   },
   created() {
