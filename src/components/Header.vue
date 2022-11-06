@@ -1,7 +1,8 @@
 <template>
   <header>
-    <h1>{{ title }}</h1>
+    <router-link to="/">{{ title }}</router-link>
     <Button 
+      v-show="homePage"
       @btn-click="$emit('toggle-add-post')" 
       :text="showAddPost ? 'Close' : 'Add a Post'" 
       :color="showAddPost ? 'red' : 'green'" 
@@ -20,6 +21,15 @@ export default {
   },
   components: {
     Button,
+  },
+  computed: {
+    homePage() {
+      if(this.$route.path === '/') {
+        return true
+      } else {
+        return false
+      }
+    }
   }
 }
 </script>
@@ -30,5 +40,11 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+    font-size: 2rem;
   }
 </style>

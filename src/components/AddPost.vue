@@ -21,7 +21,7 @@
       <input type="text" v-model="review" name="review" />
     </div>
     <div class="form-control form-control-check">
-      <label>Click on the box if you have not finished this book</label>
+      <label>Check the box if you have not finished this book</label>
       <input type="checkbox" v-model="unfinished" name="unfinished" />
     </div>
 
@@ -43,6 +43,7 @@
         unfinished: Boolean,
       }
     },
+    emits: ['add-post'], // declare emitted events
     methods: {
       onSubmit(e) {
         e.preventDefault()
@@ -62,7 +63,7 @@
           unfinished: this.unfinished,
         }
 
-        this.$emit('add-post', newPost)
+        this.$emit('add-post', newPost) 
 
         this.book = ''
         this.author = ''
@@ -100,11 +101,11 @@
   justify-content: space-between;
 }
 .form-control-check label {
-  flex: 2;
+  flex: 4;
 }
 .form-control-check input {
   flex: 2;
   height: 20px;
 }
 </style>
-Footer
+
