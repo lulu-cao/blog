@@ -1,13 +1,14 @@
 <template>
-  <div class="container">
-    <Header 
-      title="Lulu and Ian's Blog" 
-      @toggle-add-post="toggleAddPost" 
-      :showAddPost="showAddPost" 
-    />
+  <Header 
+    @toggle-add-post="toggleAddPost" 
+    @sign-up="signUp"
+    @sign-in-out="signInOut"
+    :showAddPost="showAddPost" 
+  />
+  <div class="container">  
     <router-view :showAddPost="showAddPost"></router-view>
-    <Footer />
   </div>
+  <Footer />
 </template>
 
 <script>
@@ -29,6 +30,12 @@ export default {
     toggleAddPost() {
       this.showAddPost = !this.showAddPost
     },
+    signUp() {
+      alert('Welcome to sign up!')
+    },
+    signInOut() {
+      alert('Welcome to sign in/sign out!')
+    }
   }
 }
 </script>

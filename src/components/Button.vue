@@ -1,6 +1,5 @@
 <template>
-  <button @click="onClick()" :style="{ background: color }" class="btn">
-    {{ text }}
+  <button @click.prevent="onClick" :style="{ background: color }" class="btn custom-btn">
   </button>
 </template>
 
@@ -8,7 +7,6 @@
 export default {
   name: 'Button',
   props: {
-    text: String,
     color: String,
   },
   methods: {
@@ -18,3 +16,9 @@ export default {
   }
 }
 </script>
+
+<style>
+  .custom-btn {
+    margin: 0!important;
+  }
+</style>

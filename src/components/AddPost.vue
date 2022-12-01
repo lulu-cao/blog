@@ -1,5 +1,5 @@
 <template>
-  <form @submit="onSubmit" class="add-form">
+  <form @submit.prevent="onSubmit" class="add-form">
     <div class="form-control">
       <label>Book Title</label>
       <input type="text" v-model="book" name="book" />
@@ -25,7 +25,7 @@
       <input type="checkbox" v-model="unfinished" name="unfinished" />
     </div>
 
-    <input type="submit" value="Save Post" class="btn btn-block" />
+    <button type="submit" class="btn btn-block">Save Post</button>
   </form>
   <br /><br />
 </template>
@@ -46,8 +46,6 @@
     emits: ['add-post'], // declare emitted events
     methods: {
       onSubmit(e) {
-        e.preventDefault()
-
         if(!this.book || !this.author) {
           alert('Please make sure you have filled in a title and an author for the book.')
           return

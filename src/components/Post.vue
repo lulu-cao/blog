@@ -1,5 +1,5 @@
 <template>
-  <div @dblclick="$emit('toggle-status', post.id)" :class="[post.unfinished ? 'unfinished' : '', 'post']">
+  <div @dblclick="$emit('toggle-status', post.id)" class="post" :class="completionStatus">
     <h3>
       <b>{{ post.book }}</b>
       <i @click="onDelete(post.id)" class="fas fa-times"></i>
@@ -21,6 +21,11 @@ export default {
       this.$emit('delete-post', id)
     }
   },
+  computed: {
+    completionStatus() {
+      return this.post.unfinished ? 'unfinished' : ''
+    }
+  }
 }
 </script>
 
