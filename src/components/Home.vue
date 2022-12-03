@@ -1,22 +1,23 @@
 <template>
-    <div v-if="showAddPost">
-      <AddPost @add-post="addPost" />
-    </div>
+  <div v-if="showAddPost">
+    <!-- AddPost only occurs when users click on the button to add a post. -->
+    <AddPost @add-post="addPost" />
+  </div>
     <Posts @toggle-status="toggleStatus" @delete-post="deletePost" :posts="posts"/>
 </template>
 
 <script>
-import Posts from '../components/Posts.vue'
-import AddPost from '../components/AddPost.vue'
+import Posts from './Posts.vue'
+import AddPost from './AddPost.vue'
 
 export default {
   name: 'App',
-  props: {
-    showAddPost: Boolean,
-  },
   components: {
     Posts,
     AddPost,
+  },
+  props: {
+    showAddPost: Boolean,
   },
   data() {
     return {

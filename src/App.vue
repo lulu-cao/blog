@@ -5,9 +5,11 @@
     @sign-in-out="signInOut"
     :showAddPost="showAddPost" 
   />
+
   <div class="container">  
     <router-view :showAddPost="showAddPost"></router-view>
   </div>
+  
   <Footer />
 </template>
 

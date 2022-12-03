@@ -10,7 +10,7 @@
     </div>
     <div class="form-control">
       <label>Review Date</label>
-      <input type="text" v-model="date" name="date" />
+      <input type="text" v-model="date" name="date" :placeholder="currentDay"/>
     </div>
     <div class="form-control">
       <label>Reviewer</label>
@@ -25,14 +25,17 @@
       <input type="checkbox" v-model="unfinished" name="unfinished" />
     </div>
 
-    <button type="submit" class="btn btn-block">Save Post</button>
+    <Button type="submit" class="btn-block" :color="'green'" v-text="'Save Post'"></Button>
   </form>
   <br /><br />
 </template>
 
 <script>
+  import Button from './Button.vue';
+
   export default {
     name: "AddPost",
+    components: { Button },
     data() {
       return {
         book: '',
@@ -69,6 +72,13 @@
         this.reviewer = ''
         this.review = ''
         this.unfinished = false
+      }
+    },
+    computed: {
+      currentDay() {
+        const currentMonth = new Date().toLocaleString("default", {month: "long"});
+        const currentDate = new Date().getDate();
+        return currentMonth + " " + currentDate
       }
     }
   }

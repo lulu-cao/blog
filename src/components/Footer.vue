@@ -1,7 +1,7 @@
 <template>
   <footer>
     <p>Made with <a href="https://vuejs.org/" target="_blank">VueJS</a></p>
-    <router-link to="./about">About Us</router-link>
+    <router-link to="/about">About Us</router-link>
   </footer>
 </template>
 
