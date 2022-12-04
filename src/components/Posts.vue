@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mx-5">
     <h3>{{ totalBlog }}</h3>
     <h3>
       Contributors: <span v-for="contributor, index in contributors" :key="index">{{ contributor + " " }}</span>

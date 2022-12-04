@@ -1,27 +1,27 @@
 <template>
-  <div class="flex flex-wrap w-full relative">
+  <div class="flex flex-wrap w-full relative mb-10">
     <div class="w-full justify-center flex my-2">
       <p class="absolute z-10 text-2xl text-center">Coming soon...</p>
     </div>
     <Transition name="fade">
       <div class="flex absolute justify-evenly w-full bg-teal-600" style="height: 450px" v-if="(currentSlider === 0)">
-        <img src="../assets/odyssey.jpg" class="my-12" />
-        <img src="../assets/iliad.jpeg" class="my-12" />
-        <img src="../assets/socially-undocumented.jpg" class="my-12" />
+        <img src="../assets/odyssey.jpg" class="my-12" style="height: 350px"  />
+        <img src="../assets/iliad.jpeg" class="my-12 hidden md:block" style="height: 350px" />
+        <img src="../assets/socially-undocumented.jpg" class="my-12 hidden md:block" style="height: 350px" />
       </div>
     </Transition>
     <Transition name="fade">
       <div class="flex absolute justify-evenly w-full bg-yellow-600" style="height: 450px" v-if="(currentSlider === 1)">
-        <img src="../assets/game-of-thrones.jpg" class="my-12" />
-        <img src="../assets/clash-of-kings.jpg" class="my-12" />
-        <img src="../assets/storm-of-swords.jpeg" class="my-12" />
+        <img src="../assets/game-of-thrones.jpg" class="my-12" style="height: 350px" />
+        <img src="../assets/clash-of-kings.jpg" class="my-12 hidden md:block" style="height: 350px" />
+        <img src="../assets/storm-of-swords.jpeg" class="my-12 hidden md:block" style="height: 350px" />
       </div>
     </Transition>
     <Transition name="fade">
       <div class="flex absolute justify-evenly w-full bg-blue-600" style="height: 450px" v-if="(currentSlider === 2)">
-        <img src="../assets/feast-for-crows.jpg" class="my-12" />
-        <img src="../assets/dance-with-dragons.jpg" class="my-12" />
-        <img src="../assets/house-of-leaves.jpeg" class="my-12" />
+        <img src="../assets/feast-for-crows.jpg" class="my-12 hidden md:block" style="height: 350px" />
+        <img src="../assets/dance-with-dragons.jpg" class="my-12 hidden md:block" style="height: 350px" />
+        <img src="../assets/house-of-leaves.jpeg" class="my-12" style="height: 350px" />
       </div>
     </Transition>
 

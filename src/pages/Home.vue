@@ -4,7 +4,7 @@
     <!-- "AddPost" only occurs when users click on the button to add a post. -->
     <AddPost @add-post="addPost" />
   </div>
-  <div class="container">
+  <div>
     <Posts @toggle-status="toggleStatus" @delete-post="deletePost" :posts="posts"/>
   </div>
 </template>
@@ -15,7 +15,7 @@ import AddPost from './AddPost.vue'
 import Slider from '../components/Slider.vue'
 
 export default {
-  name: 'App',
+  name: 'Home',
   components: {
     Posts,
     AddPost,
