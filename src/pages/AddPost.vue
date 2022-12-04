@@ -1,37 +1,40 @@
 <template>
-  <form @submit.prevent="onSubmit" class="add-form">
+  <form class="add-form">
     <div class="form-control">
       <label>Book Title</label>
-      <input type="text" v-model="book" name="book" />
+      <input type="text" v-model="book" name="book" class="border" />
     </div>
     <div class="form-control">
       <label>Author(s)</label>
-      <input type="text" v-model="author" name="author" />
+      <input type="text" v-model="author" name="author" class="border"/>
     </div>
     <div class="form-control">
       <label>Review Date</label>
-      <input type="text" v-model="date" name="date" :placeholder="currentDay"/>
+      <input type="text" v-model="date" name="date" class="border" :placeholder="currentDay"/>
     </div>
     <div class="form-control">
       <label>Reviewer</label>
-      <input type="text" v-model="reviewer" name="reviewer" />
+      <input type="text" v-model="reviewer" class="border" name="reviewer" />
     </div>
     <div class="form-control">
       <label>Review</label>
-      <input type="text" v-model="review" name="review" />
+      <input type="text" v-model.lazy="review" class="border" name="review" />
     </div>
     <div class="form-control form-control-check">
       <label>Check the box if you have not finished this book</label>
       <input type="checkbox" v-model="unfinished" name="unfinished" />
     </div>
-
-    <Button type="submit" class="btn-block" :color="'green'" v-text="'Save Post'"></Button>
+    <!-- <div v-for="label in labelList" :key="label.model" class="form-control">
+      <label v-text="label.title"></label>
+      <input type="text" class="border" :name="label.model" v-model="label.model" />
+    </div> -->
+    <Button type="submit" class="btn btn-block" :color="'green'" v-text="'Save Post'" @btn-click="onSubmit"></Button>
   </form>
   <br /><br />
 </template>
 
 <script>
-  import Button from './Button.vue';
+  import Button from '../components/Button.vue';
 
   export default {
     name: "AddPost",
@@ -44,6 +47,7 @@
         reviewer: '',
         review: '',
         unfinished: Boolean,
+        labelList: [ {title: "Author(s)", model: "author"}, {title:"Book Title", model:"book"}, {title:"Review Date", model:"date"} ]
       }
     },
     emits: ['add-post'], // declare emitted events

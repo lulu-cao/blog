@@ -1,20 +1,25 @@
 <template>
+  <Slider />
   <div v-if="showAddPost">
-    <!-- AddPost only occurs when users click on the button to add a post. -->
+    <!-- "AddPost" only occurs when users click on the button to add a post. -->
     <AddPost @add-post="addPost" />
   </div>
+  <div class="container">
     <Posts @toggle-status="toggleStatus" @delete-post="deletePost" :posts="posts"/>
+  </div>
 </template>
 
 <script>
-import Posts from './Posts.vue'
+import Posts from '../components/Posts.vue'
 import AddPost from './AddPost.vue'
+import Slider from '../components/Slider.vue'
 
 export default {
   name: 'App',
   components: {
     Posts,
     AddPost,
+    Slider,
   },
   props: {
     showAddPost: Boolean,
@@ -94,7 +99,7 @@ export default {
         author: 'Haruki Murakami, Alfred Birnbaum (Translator)', 
         date: "March 17, 2022",
         reviewer: "Lulu",
-        review: "	What a wild imagination! The book has a parallel of two stories that turn out to be one. The story is humorous, bizarre, and interesting. A messed-up mind desires for the power of the mind. Will the protagonist find the mind again in that perfect, mind-free world? Since the librarian found her mind back, I think the protagonist also got part of his mind back. Maybe eventually he will get most of his mind back.",
+        review: "What a wild imagination! The book has a parallel of two stories that turn out to be one. The story is humorous, bizarre, and interesting. A messed-up mind desires for the power of the mind. Will the protagonist find the mind again in that perfect, mind-free world? Since the librarian found her mind back, I think the protagonist also got part of his mind back. Maybe eventually he will get most of his mind back.",
         unfinished: false,
       },
       {
@@ -102,7 +107,8 @@ export default {
         book: '1984',
         author: 'George Orwell', 
         date: "2022",
-        unfinished: true,
+        review: "Everyone desires to be valued by others, by the community, and the society. But they are not valued in a totalitarian state. This book has exhibited extreme totalitarianism, where thoughts can be a crime, memory is the only reliable evidence, people choose to forget the truth and forget that they forget, the powerful seek to alter people's desires, and enemies are not killed until they are tortured and turned into perfect comrades (that they will choose to follow and contribute to the Party out of their free will and rationality). Totalitarianism is the result of winning power. It's still popular today. Even in today's society, individuals are always scrutinized if they are not rational. If one thinks in a very different way, others will fear you or hate you. The dangerously mentally ill are always imprisoned in their facilities. There’s always surveillance. But it’s hard to believe that a totalitarian society as extreme as the Oceania society would really exist. I always believed that the extremity of one thing can easily be its opposite. When one is the happiest, one can easily feel sadness. Just like talks of blind variation and selected survival, there’s doomed to be changes, a strike to the cage. But maybe such a society could really exist. When the group becomes so homogeneous, so distant from remote differences, it’s hard to meet conflicts and become forced to reflect and change. Am I living in an illusion that the class structure is indestructible just as Oceania people believe that Big Brother and the Party are infallible? But then still, nothing lasts. There’s doomed to be changes. One of the most important things that the Oceania society seems to be teaching is that if someone asks you what you want, the best answer is power. The power to not be abused, the power to do what you want, the power to not be afraid. But, while you can use power to do anything, there’s one thing you can’t do, and that is to decrease your power. In today’s world, science and technology mean power. If you stifle them, other inventors will eventually overpower you. If one society stifles them, other societies will eventually overpower it. But here is the dilemma. If the powerful don't give up on science and technology, there's always the possibility that their tools get stolen and misused by their enemies. So, balance and checks are always possible and changes will come eventually and maybe accidentally. On the other hand, however, it's hard to live as an individual in Oceania society. Without ways to find reliable allies, individuals' power is limited and the struggle can be centuries-long. This is why the powerful seek to destroy associations.", 
+        unfinished: false,
       },
       {
         id: 5,

@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 // 1. Define route components.
-import Home from "../components/Home"
-import About from "../components/About"
+import Home from "../pages/Home"
+import About from "../pages/About"
+import AddPost from "../pages/AddPost"
 
 // 2. Define some routes
 const routes = [
@@ -16,6 +17,11 @@ const routes = [
     name: 'About',
     component: About
   },
+  {
+    path: '/new',
+    name: 'AddPost',
+    component: AddPost
+  }
 ]
 
 // 3. Create the router instance and pass the `routes` option

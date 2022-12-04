@@ -6,9 +6,7 @@
     :showAddPost="showAddPost" 
   />
 
-  <div class="container">  
-    <router-view :showAddPost="showAddPost"></router-view>
-  </div>
+  <router-view :showAddPost="showAddPost"></router-view>
   
   <Footer />
 </template>
@@ -25,7 +23,8 @@ export default {
   },
   data() {
     return {
-      showAddPost: false
+      showAddPost: false,
+      timeout: ""
     }
   },
   methods: {
@@ -33,7 +32,14 @@ export default {
       this.showAddPost = !this.showAddPost
     },
     signUp() {
-      alert('Welcome to sign up!')
+      alert('Welcome to sign up!'); 
+      // Below wasn't doing anything so far; need to add function into "task"
+      const task = () => {}
+      this.debounce(task, 3000)
+    },
+    debounce(func, wait = 1000) {
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(func, wait)
     },
     signInOut() {
       alert('Welcome to sign in/sign out!')
