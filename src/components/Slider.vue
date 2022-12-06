@@ -28,10 +28,10 @@
     <div class="w-full" style="height:420px">
       <div class="justify-center absolute bottom-0 flex w-full" >
         <div 
-          class="w-3 h-3 mx-2 rounded-full cursor-pointer shadow-md" 
+          class="w-2 h-2 mx-2 rounded-full cursor-pointer shadow-md" 
           v-for="color, index in colorList" 
           :key="color" 
-          :class="currentSlider === index ? 'bg-gray-800' : 'bg-gray-400'"
+          :class="currentSlider === index ? 'bg-gray-800' : 'bg-gray-500'"
           @click="getActive(index)"
         ></div>
       </div>

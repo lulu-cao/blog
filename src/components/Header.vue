@@ -24,6 +24,11 @@
         v-text="signInOutBtn"
       >
       </Button>
+      <Button 
+        @btn-click="$emit('logout')"
+        v-text="'Sign Out'"
+      >
+      </Button>
     </nav>
   </header>
 </template>

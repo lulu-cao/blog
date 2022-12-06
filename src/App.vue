@@ -3,6 +3,7 @@
     @toggle-add-post="toggleAddPost" 
     @sign-up="signUp"
     @login="openLoginModal"
+    @logout="logout"
     :showAddPost="showAddPost" 
   />
 
@@ -17,6 +18,9 @@
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 import LoginModal from './components/LoginModal.vue'
+// Import firebase file; it is used in submitLogin() even though it appears dim
+import * as firebase from './utilities/firebase.js';
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 export default {
   name: 'App',
@@ -29,7 +33,9 @@ export default {
     return {
       showAddPost: false,
       timeout: "",
-      isLoginOpen: false
+      isLoginOpen: false,
+      authorized: false,
+      authUser: {}
     }
   },
   methods: {
@@ -52,6 +58,28 @@ export default {
     closeLoginModal() {
       this.isLoginOpen = false
     },
+    logout() {
+      const auth = getAuth();
+      signOut(auth).then(() => {
+        this.authorized = false;
+        console.log("logged out");
+      }).catch((error) => {
+        console.log(error);
+      });
+    }
+  },
+  mounted() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const uid = user.uid;
+        this.authUser = user;
+        this.authorized = true;
+        console.log("authorized");
+      } else {        
+        this.authorized = false;
+      }
+    });
   }
 }
 </script>
