@@ -1,15 +1,20 @@
 <template>
+  <!-- Binding the value of "authorized" to the variable "authorized" and pass it to the child as a prop -->
+  <!-- Binding the value of "showAddPost" to the variable "showAddPost" and pass it to the child as a prop -->
   <Header 
     @toggle-add-post="toggleAddPost" 
     @sign-up="signUp"
     @login="openLoginModal"
     @logout="logout"
     :showAddPost="showAddPost" 
+    :authorized="authorized"
   />
 
   <router-view :showAddPost="showAddPost"></router-view>
   
-  <LoginModal v-if="isLoginOpen" @close="closeLoginModal" />
+  <Teleport to="body">
+    <LoginModal v-if="isLoginOpen" @close="closeLoginModal" />
+  </Teleport>
 
   <Footer />
 </template>

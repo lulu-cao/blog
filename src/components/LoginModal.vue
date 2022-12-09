@@ -10,7 +10,7 @@
       <form class="p-4 my-2" @submit.prevent="submitLogin">
         <div class="my-4">
           <label>Email or Username</label>
-          <input class="w-full border rounded shadow p-2 my-2" v-model="email" placeholder="Enter your email or username" />
+          <input class="w-full border rounded shadow p-2 my-2" v-model="email" placeholder="Enter your email or username" ref="emailRef" />
         </div>
         <div class="my-4">
           <label>Password</label>
@@ -31,39 +31,48 @@
 // Import firebase file; it is used in submitLogin() even though it appears dim
 import * as firebase from '../utilities/firebase.js';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { ref, onMounted } from 'vue';
 
 export default {
-  emits: ['close'],
-  data() {
-    return {
-        email: "",
-        password: "",
-        isLoading: false
-    }
-  },
-  methods: {
-    close() {
-      this.$emit('close')
-    },
-    submitLogin() {
-      this.isLoading = true;
+  setup(_, { emit }) {
+    const emailRef = ref(""); // This is the ref attribute on the email input
+    const email = ref(""); // This is the value of the email input
+    const password = ref("");
+    const isLoading = ref(false);
+  
+    function close() {
+      emit('close')
+    };
+
+    function submitLogin() {
+      isLoading.value = true;
       const auth = getAuth();
-      signInWithEmailAndPassword(auth, this.email, this.password)
+      signInWithEmailAndPassword(auth, email.value, password.value)
         .then((userCredential) => {
           const user = userCredential.user;
-          this.isLoading = false;
-          this.email = "";
-          this.password = "";
-          this.close()
+          isLoading.value = false;
+          email.value = "";
+          password.value = "";
+          close();
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          console.log(errorMessage);
-          this.isLoading = false;
-          this.password = ""
+          console.log(errorCode + errorMessage);
+          if (errorCode === "auth/wrong-password") {
+            console.log("Wrong password")
+          } else if (errorCode === "auth/user-not-found") {
+            console.log("User not found")
+          };
+          isLoading.value = false;
+          password.value = ""
         });
-   }
-  }
+   };
+
+   onMounted(() => {emailRef.value.focus()});
+
+   return { emailRef, email, password, isLoading, close, submitLogin }
+  },
+  emits: ['close'],
 }
 </script>

@@ -7,7 +7,7 @@
     </div>
     <nav class="flex">
       <Button 
-        v-if="routedToHome"
+        v-if="authorized"
         :color="showAddPostBtnColor" 
         v-text="showAddPostBtnText"
         @btn-click="$emit('toggle-add-post')"
@@ -20,13 +20,15 @@
       >
       </Button>
       <Button 
-        @btn-click="$emit('login')"
-        v-text="signInOutBtn"
+        @btn-click="$emit('logout')"
+        v-text="'Sign Out'"
+        v-if="authorized"
       >
       </Button>
       <Button 
-        @btn-click="$emit('logout')"
-        v-text="'Sign Out'"
+        @btn-click="$emit('login')"
+        v-text="'Sign In'"
+        v-else
       >
       </Button>
     </nav>
@@ -39,22 +41,14 @@ import Button from './Button'
 export default {
   name: 'Header',
   props: {
-    title: String,
-    showAddPost: Boolean,
-    authorized: Boolean,
+    showAddPost: { type: Boolean, default: undefined, required: true },
+    authorized: { type: Boolean, default: undefined, required: true }
   },
   components: {
     Button,
   },
   computed: {
     // The template shouldn't be complex; use computed properties to handle complex logic instead
-    routedToHome() {
-      if (this.$route.path === '/') {
-        return true
-      } else {
-        return false
-      }
-    },
     routedToAbout() {
       if (this.$route.path === '/about') {
         return true
@@ -67,9 +61,6 @@ export default {
     },
     showAddPostBtnColor() {
       return this.showAddPost ? 'red' : 'darkgreen'
-    },
-    signInOutBtn() {
-      return this.authorized ? 'Sign Out' : 'Sign In'
     }
   }
 }

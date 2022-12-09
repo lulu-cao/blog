@@ -2,7 +2,7 @@
   <form class="add-form">
     <div class="form-control">
       <label>Book Title</label>
-      <input type="text" v-model="book" name="book" class="border" />
+      <input type="text" v-model="book" name="book" class="border" ref="bookTitleRef" />
     </div>
     <div class="form-control">
       <label>Author(s)</label>
@@ -84,6 +84,9 @@
         const currentDate = new Date().getDate();
         return currentMonth + " " + currentDate
       }
+    },
+    mounted() {
+      this.$refs.bookTitleRef.focus()
     }
   }
 </script>
