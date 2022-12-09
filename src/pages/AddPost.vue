@@ -1,101 +1,90 @@
 <template>
-  <form class="add-form">
+  <form class="add-form m-auto">
     <div class="form-control">
       <label>Book Title</label>
-      <input type="text" v-model="book" name="book" class="border" ref="bookTitleRef" />
+      <input type="text" v-model="book" name="book" class="border w-full mx-2 my-2" ref="bookTitleRef" />
     </div>
-    <div class="form-control">
-      <label>Author(s)</label>
-      <input type="text" v-model="author" name="author" class="border"/>
-    </div>
-    <div class="form-control">
-      <label>Review Date</label>
-      <input type="text" v-model="date" name="date" class="border" :placeholder="currentDay"/>
-    </div>
-    <div class="form-control">
-      <label>Reviewer</label>
-      <input type="text" v-model="reviewer" class="border" name="reviewer" />
+    <div v-for="label in labelList" :key="label.title" class="form-control">
+      <label v-text="label.title"></label>
+      <input type="text" class="border w-full mx-2 my-2" :name="label.name" v-model="label.model" />
     </div>
     <div class="form-control">
       <label>Review</label>
-      <input type="text" v-model.lazy="review" class="border" name="review" />
+      <textarea class="border w-full mx-2 my-2" name="review" v-model.lazy="review"></textarea>
     </div>
     <div class="form-control form-control-check">
       <label>Check the box if you have not finished this book</label>
       <input type="checkbox" v-model="unfinished" name="unfinished" />
     </div>
-    <!-- <div v-for="label in labelList" :key="label.model" class="form-control">
-      <label v-text="label.title"></label>
-      <input type="text" class="border" :name="label.model" v-model="label.model" />
-    </div> -->
-    <Button type="submit" class="btn btn-block" :color="'green'" v-text="'Save Post'" @btn-click="onSubmit"></Button>
+    <Button type="submit" class="btn w-full py-2" :color="'green'" v-text="'Save Post'" @btn-click="onSubmit"></Button>
   </form>
   <br /><br />
 </template>
 
 <script>
   import Button from '../components/Button.vue';
+  import { ref, computed, onMounted } from 'vue';
 
   export default {
     name: "AddPost",
     components: { Button },
-    data() {
-      return {
-        book: '',
-        author: '',
-        date: '',
-        reviewer: '',
-        review: '',
-        unfinished: Boolean,
-        labelList: [ {title: "Author(s)", model: "author"}, {title:"Book Title", model:"book"}, {title:"Review Date", model:"date"} ]
-      }
-    },
     emits: ['add-post'], // declare emitted events
-    methods: {
-      onSubmit(e) {
-        if(!this.book || !this.author) {
-          alert('Please make sure you have filled in a title and an author for the book.')
-          return
-        }
-
-        const newPost = {
-          id: Math.floor(Math.random() * 100000), // not a reliable way here, just temporary placeholder
-          book: this.book,
-          author: this.author,
-          date: this.date,
-          reviewer: this.reviewer,
-          review: this.review,
-          unfinished: this.unfinished,
-        }
-
-        this.$emit('add-post', newPost) 
-
-        this.book = ''
-        this.author = ''
-        this.date = ''
-        this.reviewer = ''
-        this.review = ''
-        this.unfinished = false
-      }
-    },
-    computed: {
-      currentDay() {
+    setup(_, { emit }) {
+      const getCurrentDay = computed(() => {
         const currentMonth = new Date().toLocaleString("default", {month: "long"});
         const currentDate = new Date().getDate();
         return currentMonth + " " + currentDate
-      }
-    },
-    mounted() {
-      this.$refs.bookTitleRef.focus()
+      });
+
+      const bookTitleRef = ref("");
+      const book = ref("");
+      const author = ref("");
+      const date = ref(getCurrentDay.value);
+      const reviewer = ref("");
+      const review = ref("");
+      const unfinished = ref(false);
+      const labelList = ref([ 
+        { title: "Author(s)", model: author, name: "author" }, 
+        { title: "Review Date", model: date, name: "date" }, 
+        { title: "Reviewer", model: reviewer, name: "reviewer" }, 
+      ]);
+
+      function onSubmit(e) {
+        if(!book.value || !author.value) {
+          alert('Please make sure you have filled in a title and an author for the book.')
+          return
+        };
+
+        const newPost = {
+          id: Math.floor(Math.random() * 100000), // not a reliable way here, just temporary placeholder
+          book: book.value,
+          author: author.value,
+          date: date.value,
+          reviewer: reviewer.value,
+          review: review.value,
+          unfinished: unfinished.value,
+        };
+
+        emit('add-post', newPost);
+
+        book.value = '';
+        author.value = '';
+        date.value = '';
+        reviewer.value = '';
+        review.value = '';
+        unfinished.value = false;
+      };
+
+      onMounted(() => { bookTitleRef.value.focus() });
+
+      return { bookTitleRef, book, author, date, reviewer, review, unfinished, labelList, onSubmit, getCurrentDay }
     }
   }
 </script>
 
 <style scoped>
 .add-form {
-  margin-bottom: 5rem;
   max-width: 80%;
-  margin: auto;
 }
 .form-control {
   margin: 20px 0;
@@ -104,9 +93,7 @@
   display: block;
 }
 .form-control input {
-  width: 100%;
   height: 40px;
-  margin: 5px;
   padding: 3px 7px;
   font-size: 17px;
 }

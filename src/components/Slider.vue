@@ -31,7 +31,7 @@
           class="w-2 h-2 mx-2 rounded-full cursor-pointer shadow-md" 
           v-for="color, index in colorList" 
           :key="color" 
-          :class="currentSlider === index ? 'bg-gray-800' : 'bg-gray-500'"
+          :class="currentSlider === index ? 'bg-gray-800' : 'bg-gray-400'"
           @click="getActive(index)"
         ></div>
       </div>

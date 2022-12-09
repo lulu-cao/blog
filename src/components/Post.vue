@@ -5,7 +5,11 @@
       <i @click="onDelete(post.id)" class="fas fa-times"></i>
     </h3>
     <h4>by {{ post.author }}</h4>
-    <h4 v-if="post.reviewer">Reviewer: {{ post.reviewer }}, Review Date: {{ post.date }}</h4>
+    <h4>
+      <span v-if="post.reviewer">Reviewer: {{ post.reviewer }}</span>
+      <span v-if="(post.reviewer && post.date)">, </span>
+      <span v-if="post.date">Review Date: {{ post.date }}</span>
+    </h4>
     <p>{{ post.review }}</p>
   </div>
 </template>
