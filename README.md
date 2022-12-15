@@ -24,4 +24,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 Check out the site [here](https://lulu-cao.github.io/blog/). -->
 
 ### Credits
-Credits to [Traversy Media](https://www.youtube.com/watch?v=qZXt1Aom3Cs) and [Bitfumes](https://www.youtube.com/watch?v=e-E0UB-YDRk) for their awesome tutorials. 
+Credits to [Bitfumes](https://www.youtube.com/watch?v=e-E0UB-YDRk) and [Traversy Media](https://www.youtube.com/watch?v=qZXt1Aom3Cs) for their awesome tutorials. 

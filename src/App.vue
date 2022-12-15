@@ -23,6 +23,7 @@ import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 import LoginModal from './components/LoginModal.vue'
 import Alert from './components/Alert.vue'
+import { useAuthStore } from '@/store/useAuthStore'
 import { ref, reactive } from 'vue';
 // Import firebase file; it is used in submitLogin() even though it appears dim
 import * as firebase from './utilities/firebase.js';
@@ -43,7 +44,7 @@ export default {
       authorized: false,
       authUser: {},
       isSignedIn: false,
-      isSignedOut: false
+      isSignedOut: false,
     });
 
     function signUp() {
@@ -93,10 +94,12 @@ export default {
         const uid = user.uid;
         this.authUser = user;
         this.state.authorized = true;
-        console.log("signed in")
+        console.log("signed in");
+        useAuthStore().addAuthentication();
       } else {        
         this.state.authorized = false;
         console.log("not signed in");
+        useAuthStore().cancelAuthentication();
       }
     });
   }

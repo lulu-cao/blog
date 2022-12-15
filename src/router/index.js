@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '../store/useAuthStore'
 
 // 1. Define route components.
 import Home from "../pages/Home"
@@ -20,7 +21,14 @@ const routes = [
   {
     path: '/new',
     name: 'AddPost',
-    component: AddPost
+    component: AddPost,
+    beforeEnter: (_, __, next) => {
+      if ( useAuthStore().authenticated === false ) {
+        next("/")
+      } else {
+        next()
+      }
+    }
   }
 ]
 
