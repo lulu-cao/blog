@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-16 fixed bottom-0">
+  <div class="w-full min-h-fit fixed bottom-0">
     <button @click="closeAlert" class="text-white mr-1 ml-auto block" >x</button>
     <p class="text-white text-center mb-3">
       <slot>Success!</slot>

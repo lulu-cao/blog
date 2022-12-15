@@ -9,9 +9,9 @@
       <Button 
         v-if="authorized"
         :color="showAddPostBtnColor" 
-        @btn-click="$emit('toggle-add-post')"
-      >      
-      {{ showAddPostBtnText }}
+        @btn-click="store.toggle"
+        v-text=showAddPostBtnText
+      >
       </Button>
       <Button 
         v-if="!authorized" 
@@ -36,32 +36,39 @@
 </template>
 
 <script>
-import Button from './Button'
+import Button from './Button';
+import { computed } from 'vue';
+import { usePostStore } from '@/store/usePostStore'; // Use curly braces even if there's only one thing exported
 
 export default {
   name: 'Header',
   props: {
-    showAddPost: { type: Boolean, default: undefined, required: true },
     authorized: { type: Boolean, default: undefined, required: true }
   },
   components: {
     Button,
   },
-  computed: {
-    routedToAbout() {
+  setup() {
+    const store = usePostStore();
+
+    function routedToAbout() {
       if (this.$route.path === '/about') {
         return true
       } else {
         return false
       }
-    },
-    showAddPostBtnText() {
-      return this.showAddPost ? 'Close' : 'Add a Post'
-    },
-    showAddPostBtnColor() {
-      return this.showAddPost ? 'bg-gradient-to-r from-red-800 to-pink-600' : 'bg-gradient-to-r from-green-800 to-green-600'
-    }
-  }
+    };
+
+    const showAddPostBtnText = computed(() => {
+      return store.isAddPostOpen ? 'Close' : 'Add a Post'
+    });
+
+    const showAddPostBtnColor = computed(() => {
+      return store.isAddPostOpen ? 'bg-gradient-to-r from-red-800 to-pink-600' : 'bg-gradient-to-r from-green-800 to-green-600'
+    });
+
+    return { store, routedToAbout, showAddPostBtnText, showAddPostBtnColor }
+  },
 }
 </script>
 

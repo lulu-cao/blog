@@ -1,16 +1,13 @@
 <template>
   <!-- Binding the value of "authorized" to the variable "authorized" and pass it to the child as a prop -->
-  <!-- Binding the value of "showAddPost" to the variable "showAddPost" and pass it to the child as a prop -->
   <Header 
-    @toggle-add-post="toggleAddPost" 
     @sign-up="signUp"
     @login="openLoginModal"
     @logout="logout"
-    :showAddPost="state.showAddPost" 
     :authorized="state.authorized"
   />
 
-  <router-view :showAddPost="state.showAddPost"></router-view>
+  <router-view></router-view>
   
   <Teleport to="body">
     <LoginModal v-if="state.isLoginOpen" @close="closeLoginModal" @showSuccessAlert="state.isSignedIn = true" />
@@ -41,7 +38,6 @@ export default {
   },
   setup() {
     const state = reactive({
-      showAddPost: false,
       timeout: "",
       isLoginOpen: false,
       authorized: false,
@@ -49,10 +45,6 @@ export default {
       isSignedIn: false,
       isSignedOut: false
     });
-
-    function toggleAddPost() {
-      state.showAddPost = !state.showAddPost
-    };
 
     function signUp() {
       alert('Welcome to sign up!'); 
@@ -92,7 +84,7 @@ export default {
       state.isSignedOut = false
     };
 
-    return { state, toggleAddPost, signUp, debounce, openLoginModal, closeLoginModal, logout, closeSignInAlert, closeSignOutAlert }
+    return { state, signUp, debounce, openLoginModal, closeLoginModal, logout, closeSignInAlert, closeSignOutAlert }
   },
   mounted() {
     const auth = getAuth();

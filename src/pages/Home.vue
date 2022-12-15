@@ -1,6 +1,6 @@
 <template>
   <Slider />
-  <div v-if="showAddPost">
+  <div v-if="store.isAddPostOpen">
     <!-- "AddPost" only occurs when users click on the button to add a post. -->
     <AddPost @add-post="addPost" />
   </div>
@@ -15,6 +15,7 @@ import Posts from '../components/Posts.vue'
 import AddPost from './AddPost.vue'
 import Slider from '../components/Slider.vue'
 import Alerts from '../components/Alerts.vue'
+import { usePostStore } from '@/store/usePostStore'
 
 export default {
   name: 'Home',
@@ -24,15 +25,13 @@ export default {
     Slider,
     Alerts,
   },
-  props: {
-    showAddPost: Boolean,
-  },
   data() {
     return {
       posts: [],
       isSuccessAlertOpen: false,
       isFailureAlertOpen: false,
-      isAlertOpen: false
+      isAlertOpen: false,
+      store: usePostStore()
     }
   },
   methods: {

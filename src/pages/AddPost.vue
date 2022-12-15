@@ -30,7 +30,6 @@
   export default {
     name: "AddPost",
     components: { Alert },
-    props: ['showAddPost'],
     emits: ['add-post'], // declare emitted events
     setup(props, { emit }) {
       const getCurrentDay = computed(() => {
