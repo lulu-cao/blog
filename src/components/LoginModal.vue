@@ -17,7 +17,7 @@
           <input class="w-full border rounded shadow p-2 my-2" v-model="password" placeholder="Enter your password" type="password" />
         </div>
         <div class="my-4">
-          <button type="submit" class="w-full rounded shadow-md bg-gradient-to-r from-red-800 to-pink-800 text-white p-2">
+          <button type="submit" class="w-full rounded shadow-md bg-gradient-to-r from-red-800 to-pink-600 text-white p-2">
             <span v-if="!isLoading">Login</span>
             <span v-else>⏳</span>
           </button>
@@ -44,6 +44,10 @@ export default {
       emit('close')
     };
 
+    function showAlert() {
+      emit('showSuccessAlert')
+    };
+
     function submitLogin() {
       isLoading.value = true;
       const auth = getAuth();
@@ -53,6 +57,7 @@ export default {
           isLoading.value = false;
           email.value = "";
           password.value = "";
+          showAlert();
           close();
         })
         .catch((error) => {
@@ -71,8 +76,8 @@ export default {
 
    onMounted(() => {emailRef.value.focus()});
 
-   return { emailRef, email, password, isLoading, close, submitLogin }
+   return { emailRef, email, password, isLoading, close, submitLogin, showAlert }
   },
-  emits: ['close'],
+  emits: ['close','showSuccessAlert'],
 }
 </script>

@@ -7,12 +7,14 @@
   <div>
     <Posts @toggle-status="toggleStatus" @delete-post="deletePost" :posts="posts"/>
   </div>
+  <Alerts v-if="isAlertOpen" @closeSuccessAlert="closeSuccessAlert" :isSuccessAlertOpen="isSuccessAlertOpen" />
 </template>
 
 <script>
 import Posts from '../components/Posts.vue'
 import AddPost from './AddPost.vue'
 import Slider from '../components/Slider.vue'
+import Alerts from '../components/Alerts.vue'
 
 export default {
   name: 'Home',
@@ -20,13 +22,17 @@ export default {
     Posts,
     AddPost,
     Slider,
+    Alerts,
   },
   props: {
     showAddPost: Boolean,
   },
   data() {
     return {
-      posts: []
+      posts: [],
+      isSuccessAlertOpen: false,
+      isFailureAlertOpen: false,
+      isAlertOpen: false
     }
   },
   methods: {
@@ -36,7 +42,13 @@ export default {
       }
     },
     addPost(post) {
-      this.posts = [...this.posts, post]
+      this.posts = [...this.posts, post];
+      this.isAlertOpen = true;
+      this.isSuccessAlertOpen = true;
+    },
+    closeSuccessAlert() {
+      this.isSuccessAlertOpen = false;
+      this.isAlertOpen = false;
     },
     toggleStatus(id) { 
       this.posts = this.posts.map((post) => 

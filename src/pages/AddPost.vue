@@ -16,20 +16,23 @@
       <label>Check the box if you have not finished this book</label>
       <input type="checkbox" v-model="unfinished" name="unfinished" />
     </div>
-    <Button type="submit" class="btn w-full py-2" :color="'green'" v-text="'Save Post'" @btn-click="onSubmit"></Button>
+    <!-- need to add ".prevent" for @click for buttons; otherwise, the page will auto refresh -->
+    <button type="submit" class="btn rounded w-full py-2 bg-gradient-to-r from-green-800 to-green-600 text-white" @click.prevent="onSubmit">Save Post</button>
   </form>
+  <Alert v-if="isPostAlertOpen" class="bg-red-700" @closeAlert="closePostAlert">Please make sure you have filled in a title and an author for the book.</Alert>
   <br /><br />
 </template>
 
 <script>
-  import Button from '../components/Button.vue';
+  import Alert from '../components/Alert.vue';
   import { ref, computed, onMounted } from 'vue';
 
   export default {
     name: "AddPost",
-    components: { Button },
+    components: { Alert },
+    props: ['showAddPost'],
     emits: ['add-post'], // declare emitted events
-    setup(_, { emit }) {
+    setup(props, { emit }) {
       const getCurrentDay = computed(() => {
         const currentMonth = new Date().toLocaleString("default", {month: "long"});
         const currentDate = new Date().getDate();
@@ -51,7 +54,7 @@
 
       function onSubmit(e) {
         if(!book.value || !author.value) {
-          alert('Please make sure you have filled in a title and an author for the book.')
+          isPostAlertOpen.value = true;
           return
         };
 
@@ -77,7 +80,13 @@
 
       onMounted(() => { bookTitleRef.value.focus() });
 
-      return { bookTitleRef, book, author, date, reviewer, review, unfinished, labelList, onSubmit, getCurrentDay }
+      const isPostAlertOpen = ref(false);
+
+      const closePostAlert = () => {
+        isPostAlertOpen.value = false
+      };
+
+      return { bookTitleRef, book, author, date, reviewer, review, unfinished, labelList, onSubmit, getCurrentDay, isPostAlertOpen, closePostAlert }
     }
   }
 </script>

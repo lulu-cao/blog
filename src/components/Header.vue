@@ -9,27 +9,27 @@
       <Button 
         v-if="authorized"
         :color="showAddPostBtnColor" 
-        v-text="showAddPostBtnText"
         @btn-click="$emit('toggle-add-post')"
       >      
+      {{ showAddPostBtnText }}
       </Button>
       <Button 
         v-if="!authorized" 
         @btn-click="$emit('sign-up')"
-        v-text="'Sign Up'"
       >
+      Sign Up
       </Button>
       <Button 
         @btn-click="$emit('logout')"
-        v-text="'Sign Out'"
         v-if="authorized"
       >
+      Sign Out
       </Button>
       <Button 
         @btn-click="$emit('login')"
-        v-text="'Sign In'"
         v-else
       >
+      Sign In
       </Button>
     </nav>
   </header>
@@ -48,7 +48,6 @@ export default {
     Button,
   },
   computed: {
-    // The template shouldn't be complex; use computed properties to handle complex logic instead
     routedToAbout() {
       if (this.$route.path === '/about') {
         return true
@@ -60,7 +59,7 @@ export default {
       return this.showAddPost ? 'Close' : 'Add a Post'
     },
     showAddPostBtnColor() {
-      return this.showAddPost ? 'red' : 'darkgreen'
+      return this.showAddPost ? 'bg-gradient-to-r from-red-800 to-pink-600' : 'bg-gradient-to-r from-green-800 to-green-600'
     }
   }
 }
