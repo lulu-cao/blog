@@ -2,7 +2,6 @@
   <!-- Binding the value of "authorized" to the variable "authorized" and pass it to the child as a prop -->
   <Header 
     @sign-up="signUp"
-    @login="openLoginModal"
     @logout="logout"
     :authorized="state.authorized"
   />
@@ -10,7 +9,7 @@
   <router-view></router-view>
   
   <Teleport to="body">
-    <LoginModal v-if="state.isLoginOpen" @close="closeLoginModal" @showSuccessAlert="state.isSignedIn = true" />
+    <LoginModal @showSuccessAlert="state.isSignedIn = true" />
   </Teleport>
 
   <Footer />
@@ -40,7 +39,6 @@ export default {
   setup() {
     const state = reactive({
       timeout: "",
-      isLoginOpen: false,
       authorized: false,
       authUser: {},
       isSignedIn: false,
@@ -57,14 +55,6 @@ export default {
     function debounce(func, wait = 1000) {
       clearTimeout(state.timeout);
       state.timeout = setTimeout(func, wait)
-    };
-
-    function openLoginModal() {
-      state.isLoginOpen = true
-    };
-
-    function closeLoginModal() {
-      state.isLoginOpen = false
     };
 
     function logout() {
@@ -85,7 +75,7 @@ export default {
       state.isSignedOut = false
     };
 
-    return { state, signUp, debounce, openLoginModal, closeLoginModal, logout, closeSignInAlert, closeSignOutAlert }
+    return { state, signUp, debounce, logout, closeSignInAlert, closeSignOutAlert }
   },
   mounted() {
     const auth = getAuth();
