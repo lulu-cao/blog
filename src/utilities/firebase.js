@@ -1,17 +1,14 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 
-// Import .env file; it is used in firebaseConfig even though it appears dim
-import * as env from "../../.env";
-
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: apiKey,
-  authDomain: authDomain,
-  projectId: projectId,
-  storageBucket: storageBucket,
-  messagingSenderId: messagingSenderId,
-  appId: appId
+  apiKey: `${process.env.VUE_APP_apiKey}`,
+  authDomain: `${process.env.VUE_APP_authDomain}`,
+  projectId: `${process.env.VUE_APP_projectId}`,
+  storageBucket: `${process.env.VUE_APP_storageBucket}`,
+  messagingSenderId: `${process.env.VUE_APP_messagingSenderId}`,
+  appId: `${process.env.VUE_APP_appId}`
 };
 
 // Initialize Firebase
