@@ -5,26 +5,26 @@
       <router-link v-if="routedToAbout" to="/new">Add a Post</router-link>
     </div>
     <nav class="flex">
-      <Button 
+      <Button
         v-if="authorized"
-        :color="showAddPostBtnColor" 
+        :color="showAddPostBtnColor"
         @btn-click="store.toggle"
         v-text=showAddPostBtnText
       >
       </Button>
-      <Button 
-        v-if="!authorized" 
+      <Button
+        v-if="!authorized"
         @btn-click="$emit('sign-up')"
       >
       Sign Up
       </Button>
-      <Button 
+      <Button
         @btn-click="$emit('logout')"
         v-if="authorized"
       >
       Sign Out
       </Button>
-      <Button 
+      <Button
         @btn-click="loginStore.setLoginOpen(true)"
         v-else
       >
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import Button from './Button';
+import Button from './Button.vue';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { usePostStore } from '@/store/usePostStore'; // Use curly braces even if there's only one thing exported
@@ -62,8 +62,8 @@ export default {
 
     const routedToAbout = computed(()=>{
       const route = useRoute();
-      
-      if (route.path === '/about') {
+
+      if (route && route.path === '/about') {
         return true
       } else {
         return false

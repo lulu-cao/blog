@@ -2,12 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../store/useAuthStore'
 
 // 1. Define route components.
-import Home from "../pages/Home"
-import Movie from "../pages/Movie"
-import Tv from "../pages/Tv"
-import Restaurant from "../pages/Restaurant"
-import About from "../pages/About"
-import AddPost from "../pages/AddPost"
+import Home from "../pages/Home.vue"
+import Movie from "../pages/Movie.vue"
+import Tv from "../pages/Tv.vue"
+import Restaurant from "../pages/Restaurant.vue"
+import About from "../pages/About.vue"
+import AddPost from "../pages/AddPost.vue"
 
 // 2. Define some routes
 const routes = [
@@ -55,7 +55,7 @@ const routes = [
 
 // 3. Create the router instance and pass the `routes` option
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
 
