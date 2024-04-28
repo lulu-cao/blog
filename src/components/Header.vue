@@ -1,5 +1,43 @@
 <template>
-  <header class="w-full bg-gradient-to-r from-blue-600 to-blue-400 px-4 py-2 flex flex-wrap justify-between">
+  <v-app-bar :elevation="2" image="https://picsum.photos/1920/1080?random">
+    <template v-slot:image>
+      <v-img
+        gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"
+      ></v-img>
+    </template>
+
+    <template v-slot:prepend>
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+    </template>
+
+    <v-app-bar-title>Blog</v-app-bar-title>
+
+    <Button
+      v-if="authorized"
+      @btn-click="store.toggle"
+      v-text=showAddPostBtnText
+    >
+    </Button>
+    <Button
+      v-if="!authorized"
+      @btn-click="$emit('sign-up')"
+    >
+    Sign Up
+    </Button>
+    <Button
+      @btn-click="$emit('logout')"
+      v-if="authorized"
+    >
+    Sign Out
+    </Button>
+    <Button
+      @btn-click="loginStore.setLoginOpen(true)"
+      v-else
+    >
+    Sign In
+    </Button>
+  </v-app-bar>
+  <!-- <header class="w-full bg-gradient-to-r from-blue-600 to-blue-400 px-4 py-2 flex flex-wrap justify-between">
     <div class="flex flex-wrap my-2">
       <router-link v-for="route in list" :key="route.to" :to="route.to">{{ route.title }}</router-link>
       <router-link v-if="routedToAbout" to="/new">Add a Post</router-link>
@@ -7,7 +45,6 @@
     <nav class="flex">
       <Button
         v-if="authorized"
-        :color="showAddPostBtnColor"
         @btn-click="store.toggle"
         v-text=showAddPostBtnText
       >
@@ -31,7 +68,7 @@
       Sign In
       </Button>
     </nav>
-  </header>
+  </header> -->
 </template>
 
 <script>
@@ -74,11 +111,7 @@ export default {
       return store.isAddPostOpen ? 'Close' : 'Add a Post'
     });
 
-    const showAddPostBtnColor = computed(() => {
-      return store.isAddPostOpen ? 'bg-gradient-to-r from-red-800 to-pink-600' : 'bg-gradient-to-r from-green-800 to-green-600'
-    });
-
-    return { store, loginStore, list, routedToAbout, showAddPostBtnText, showAddPostBtnColor }
+    return { store, loginStore, list, routedToAbout, showAddPostBtnText }
   },
 }
 </script>

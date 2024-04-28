@@ -1,20 +1,22 @@
 <template>
   <!-- Binding the value of "authorized" to the variable "authorized" and pass it to the child as a prop -->
-  <Header 
-    @sign-up="signUp"
-    @logout="logout"
-    :authorized="state.authorized"
-  />
+  <v-app>
+    <Header
+      @sign-up="signUp"
+      @logout="logout"
+      :authorized="state.authorized"
+    />
 
-  <router-view></router-view>
-  
-  <Teleport to="body">
-    <LoginModal @showSuccessAlert="state.isSignedIn = true" />
-  </Teleport>
+    <router-view></router-view>
 
-  <Footer />
-  <Alert v-if="state.isSignedIn" @closeAlert="closeSignInAlert" class="bg-green-800">Welcome back!</Alert>
-  <Alert v-if="state.isSignedOut" @closeAlert="closeSignOutAlert" class="bg-green-800">You have been signed out.</Alert>
+    <Teleport to="body">
+      <LoginModal @showSuccessAlert="state.isSignedIn = true" />
+    </Teleport>
+
+    <Footer />
+    <Alert v-if="state.isSignedIn" @closeAlert="closeSignInAlert" class="bg-green-800">Welcome back!</Alert>
+    <Alert v-if="state.isSignedOut" @closeAlert="closeSignOutAlert" class="bg-green-800">You have been signed out.</Alert>
+  </v-app>
 </template>
 
 <script>
@@ -46,7 +48,7 @@ export default {
     });
 
     function signUp() {
-      alert('Welcome to sign up!'); 
+      alert('Welcome to sign up!');
       // Below wasn't doing anything so far; need to add function into "task"
       const task = () => {}
       debounce(task, 3000)
@@ -86,7 +88,7 @@ export default {
         this.state.authorized = true;
         console.log("signed in");
         useAuthStore().addAuthentication();
-      } else {        
+      } else {
         this.state.authorized = false;
         console.log("not signed in");
         useAuthStore().cancelAuthentication();

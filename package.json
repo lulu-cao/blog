@@ -15,7 +15,8 @@
     "pinia": "^2.0.28",
     "vite": "^2.6",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.13"
+    "vue-router": "^4.0.13",
+    "vuetify": "^3.5.17"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",
