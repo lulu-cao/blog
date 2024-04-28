@@ -2,6 +2,6 @@
 // This file helps reduce complexity of other files and repetitiveness for adding baseURL
 import axios from 'axios';
 
-axios.defaults.baseURL= import.meta.env.VITE_API_URL;
+axios.defaults.baseURL= "https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/"
 
 export default axios;

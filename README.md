@@ -1,6 +1,7 @@
 # Blog
 
 A beginner Vue project with both Options API and composition API.
+Access the backend [here](https://blog-cms-django-abaff6e17c2a.herokuapp.com/admin). See backend repo [here](https://github.com/lulu-cao/blog-cms-django).
 
 ## Project setup
 ```
