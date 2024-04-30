@@ -3,14 +3,14 @@ import * as firebase from '../utilities/firebase.js';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { ref, onMounted } from 'vue';
 import { useLoginStore } from '@/store/useLoginStore.js';
+import { useAuthStore } from '@/store/useAuthStore.js';
+import { useRouter } from 'vue-router';
 
 const emailRef = ref("");
 const isLoading = ref(false);
 const store = useLoginStore();
-
-function close() {
-  store.setLoginOpen(false)
-};
+const router = useRouter();
+const authStore = useAuthStore();
 
 function showAlert() {
   emit('showSuccessAlert')
@@ -25,11 +25,12 @@ function submitLogin() {
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then((userCredential) => {
       const user = userCredential.user;
+      authStore.setCurrentUserUid(user.uid)
+      authStore.setCurrentUserEmail(user.email)
+      console.log(user);
       isLoading.value = false;
-      email.value = "";
-      password.value = "";
       showAlert();
-      close();
+      router.push('/explore')
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -56,8 +57,6 @@ const remember = ref(false);
 
 const rules = {
   required: (v) => !!v || 'Required.',
-  email: (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-  password: (v) => (v && v.length >= 8) || 'Password must be at least 8 characters',
 };
 </script>
 
@@ -80,7 +79,7 @@ const rules = {
                 <v-text-field
                   prepend-inner-icon="mdi-email"
                   v-model="email"
-                  :rules="[rules.required, rules.email]"
+                  :rules="[rules.required]"
                   label="Email"
                   ref="emailRef"
                 ></v-text-field>
@@ -88,7 +87,7 @@ const rules = {
                 <v-text-field
                   prepend-inner-icon="mdi-lock"
                   v-model="password"
-                  :rules="[rules.required, rules.password]"
+                  :rules="[rules.required]"
                   label="Password"
                   type="password"
                 ></v-text-field>

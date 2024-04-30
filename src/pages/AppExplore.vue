@@ -1,3 +1,15 @@
+<script setup>
+import axios from 'axios'
+
+axios.get('https://medium.com/feed/@lcao_5526')
+  .then((response) => {
+    console.log(response.data)
+  })
+  .catch((error) => {
+    console.log(error)
+  })
+</script>
+
 <template>
   <v-card color="teal-lighten-3">
     <v-card-title>w Blogging</v-card-title>
@@ -14,9 +26,6 @@
     </v-card-text>
   </v-card>
 </template>
-
-<script>
-</script>
 
 <style scoped>
 a {
