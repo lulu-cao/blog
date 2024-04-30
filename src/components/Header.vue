@@ -1,3 +1,47 @@
+<script setup>
+import Button from './Button.vue';
+import { ref, computed } from 'vue';
+import { useTheme } from 'vuetify';
+import { useRoute } from 'vue-router';
+import { usePostStore } from '@/store/usePostStore'; // Use curly braces even if there's only one thing exported
+import { useLoginStore } from '@/store/useLoginStore';
+
+const props = defineProps({
+  authorized: { type: Boolean, default: undefined, required: true }
+});
+
+const isDarkTheme = ref(true);
+const theme = useTheme();
+const changeTheme = () => {
+  isDarkTheme.value = !isDarkTheme.value;
+  theme.global.name = theme.global.current.dark ? 'light' : 'dark'
+};
+
+const store = usePostStore();
+const loginStore = useLoginStore();
+const list = [
+  { title: "Blog", to: "/"},
+  { title: "Movie", to: "/movie"},
+  { title: "TV", to: "/tv"},
+  { title: "Restaurant", to: "/restaurant"},
+  { title: "About", to: "/about"},
+];
+
+const routedToAbout = computed(()=>{
+  const route = useRoute();
+
+  if (route && route.path === '/about') {
+    return true
+  } else {
+    return false
+  }
+});
+
+const showAddPostBtnText = computed(() => {
+  return store.isAddPostOpen ? 'Close' : 'Add a Post'
+});
+</script>
+
 <template>
   <v-app-bar :elevation="2" image="https://picsum.photos/1920/1080?random">
     <template v-slot:image>
@@ -11,6 +55,12 @@
     </template>
 
     <v-app-bar-title>Blog</v-app-bar-title>
+
+    <v-spacer></v-spacer>
+
+    <v-btn icon @click="changeTheme">
+      <v-icon :icon="isDarkTheme ? 'mdi-white-balance-sunny' : 'mdi-weather-night'"></v-icon>
+    </v-btn>
 
     <Button
       v-if="authorized"
@@ -70,51 +120,6 @@
     </nav>
   </header> -->
 </template>
-
-<script>
-import Button from './Button.vue';
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
-import { usePostStore } from '@/store/usePostStore'; // Use curly braces even if there's only one thing exported
-import { useLoginStore } from '@/store/useLoginStore';
-
-export default {
-  name: 'Header',
-  props: {
-    authorized: { type: Boolean, default: undefined, required: true }
-  },
-  components: {
-    Button,
-  },
-  setup() {
-    const store = usePostStore();
-    const loginStore = useLoginStore();
-    const list = [
-      { title: "Blog", to: "/"},
-      { title: "Movie", to: "/movie"},
-      { title: "TV", to: "/tv"},
-      { title: "Restaurant", to: "/restaurant"},
-      { title: "About", to: "/about"},
-    ];
-
-    const routedToAbout = computed(()=>{
-      const route = useRoute();
-
-      if (route && route.path === '/about') {
-        return true
-      } else {
-        return false
-      }
-    });
-
-    const showAddPostBtnText = computed(() => {
-      return store.isAddPostOpen ? 'Close' : 'Add a Post'
-    });
-
-    return { store, loginStore, list, routedToAbout, showAddPostBtnText }
-  },
-}
-</script>
 
 <style scoped>
 a {

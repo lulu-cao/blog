@@ -6,8 +6,22 @@
       @logout="logout"
       :authorized="state.authorized"
     />
+    <v-navigation-drawer>
+      <v-list>
+        <v-list-item v-for="route in list" :key="route.to">
+          <router-link :to="route.to">{{ route.title }}</router-link>
+        </v-list-item>
+        <v-list-item v-if="routedToAbout">
+          <router-link to="/new">Add a Post</router-link>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
-    <router-view></router-view>
+    <v-main>
+      <v-fade-transition>
+        <router-view></router-view>
+      </v-fade-transition>
+    </v-main>
 
     <Teleport to="body">
       <LoginModal @showSuccessAlert="state.isSignedIn = true" />

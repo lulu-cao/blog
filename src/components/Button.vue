@@ -1,5 +1,5 @@
 <template>
-  <v-btn @click="onClick">
+  <v-btn @click="onClick" variant="elevated">
     <slot></slot>
   </v-btn>
 </template>
