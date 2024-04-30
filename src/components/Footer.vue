@@ -1,5 +1,5 @@
 <script setup>
-const links = ['Home', 'About', 'Services', 'Contact']
+const links = ['LinkedIn', 'GitHub', 'Medium', 'Resume']
 </script>
 
 <template>
@@ -16,7 +16,7 @@ const links = ['Home', 'About', 'Services', 'Contact']
         {{ link }}
       </v-btn>
       <v-col class="text-center mt-4" cols="12">
-        {{ new Date().getFullYear() }} — <strong>Lulu Cao</strong>
+        {{ new Date().getFullYear() }} @ <strong>Lulu Cao</strong>
       </v-col>
     </v-row>
   </v-footer>

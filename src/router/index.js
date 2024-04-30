@@ -1,43 +1,47 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../store/useAuthStore'
 
-// 1. Define route components.
-import Home from "../pages/Home.vue"
-import Movie from "../pages/Movie.vue"
-import Tv from "../pages/Tv.vue"
-import Restaurant from "../pages/Restaurant.vue"
-import About from "../pages/About.vue"
 import AddPost from "../pages/AddPost.vue"
+import AppBlog from '@/pages/AppBlog.vue'
+import AppRss from '@/pages/AppRss.vue'
+import AppAccount from '@/pages/AppAccount.vue'
+import AppExplore from '@/pages/AppExplore.vue'
+import AppHome from '@/pages/AppHome.vue'
+import SigninSignup from '@/pages/SigninSignup.vue'
 
-// 2. Define some routes
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: AppHome,
   },
   {
-    path: '/movie',
-    name: 'Movie',
-    component: Movie,
+    path: '/blog',
+    name: 'Blog',
+    component: AppBlog,
     meta: { middleware: "auth" }
   },
   {
-    path: '/tv',
-    name: 'TV',
-    component: Tv,
+    path: '/rss',
+    name: 'RSS',
+    component: AppRss,
     meta: { middleware: "auth" }
   },
   {
-    path: '/restaurant',
-    name: 'Restaurant',
-    component: Restaurant,
+    path: '/account',
+    name: 'AppAccount',
+    component: AppAccount,
     meta: { middleware: "auth" }
   },
   {
-    path: '/about',
-    name: 'About',
-    component: About
+    path: '/explore',
+    name: 'AppExplore',
+    component: AppExplore,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: SigninSignup,
   },
   {
     path: '/new',

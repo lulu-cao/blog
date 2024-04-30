@@ -1,25 +1,18 @@
 <template>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <HomeRss />
-  <HomeBlog />
-  <RouterView />
+  <v-card color="teal-lighten-3">
+    <v-card-title>Personal Blogging</v-card-title>
+    <v-card-text>
+      <img src="https://source.unsplash.com/1600x900/?blog" alt="Home" />
+      A place to write your personal blogs!
+    </v-card-text>
+  </v-card>
+  <v-card color="teal-lighten-3">
+    <v-card-title>One-Stop Reading</v-card-title>
+    <v-card-text>
+      <img src="https://source.unsplash.com/1600x900/?read" alt="Home" />
+      A place to read your favorate RSS feeds!
+    </v-card-text>
+  </v-card>
   <!-- <Slider />
   <div v-if="store.isAddPostOpen">
     <AddPost @add-post="addPost" />
@@ -31,9 +24,6 @@
 </template>
 
 <script>
-import HomeRss from '../components/HomeRSS.vue';
-import HomeBlog from '../components/HomeBlog.vue';
-import { RouterView } from 'vue-router';
 import Posts from '../components/Posts.vue'
 import AddPost from './AddPost.vue'
 import Slider from '../components/Slider.vue'
