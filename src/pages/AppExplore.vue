@@ -15,7 +15,7 @@ axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/featured-artic
 
 <template>
   <v-container>
-    <v-row rows="3" justify="center">
+    <v-row rows="3">
       <v-col cols="6" v-for="article in articles" :key="article.id">
         <v-card height="500" class="overflow-hidden">
           <v-card-title>

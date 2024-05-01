@@ -11,6 +11,7 @@ const isLoading = ref(false);
 const store = useLoginStore();
 const router = useRouter();
 const authStore = useAuthStore();
+const emit = defineEmits(['showSuccessAlert']);
 
 function showAlert() {
   emit('showSuccessAlert')
@@ -25,6 +26,7 @@ function submitLogin() {
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then((userCredential) => {
       const user = userCredential.user;
+      localStorage.setItem('user', JSON.stringify(user.uid));
       authStore.setCurrentUserUid(user.uid)
       authStore.setCurrentUserEmail(user.email)
       console.log(user);
@@ -48,7 +50,6 @@ function submitLogin() {
 
 onMounted(() => {store.isLoginOpen ? emailRef.value.focus() : ""});
 
-const emits = defineEmits(['showSuccessAlert']);
 const firstName = ref('');
 const lastName = ref('');
 const email = ref('');

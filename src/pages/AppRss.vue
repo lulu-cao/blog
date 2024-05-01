@@ -1,30 +1,26 @@
 <script setup>
-import axios from 'axios'
+import { onMounted } from 'vue';
 import { ref } from 'vue'
-import { useAuthStore } from '@/store/useAuthStore';
+import { useRssStore } from '@/store/useRssStore'
 import { computed } from 'vue';
 
-const articles = ref([])
-const authStore = useAuthStore();
-
-const userUid = computed(() => {
-  console.log(authStore.currentUserUid);
-  authStore.currentUserUid
+const rssStore = useRssStore();
+const userFeeds = computed(() => {
+  console.log(rssStore.userFeeds);
+  console.log(rssStore.userUid);
+  if (rssStore.userHasFeeds) {
+    return rssStore.userFeeds
+  }
 });
-
-axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/featured-articles/')
-  .then((response) => {
-    articles.value = response.data
-  })
-  .catch((error) => {
-    console.log(error)
-  })
 </script>
 
 <template>
-  <v-container>
+  <v-container v-if="userFeeds && userFeeds.length !== 0">
+    <div v-for="article in userFeeds" :key="article.id">
+      <h1>{{ article.title }}</h1>
+    </div>
     <v-row rows="3" justify="center">
-      <v-col cols="6" v-for="article in articles" :key="article.id">
+      <v-col cols="6" v-for="article in userFeeds" :key="article.id">
         <v-card height="500" class="overflow-hidden">
           <v-card-title>
             <a :href="article.link" target="_blank">{{ article.title }}</a>
