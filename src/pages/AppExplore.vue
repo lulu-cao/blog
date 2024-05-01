@@ -1,9 +1,12 @@
 <script setup>
 import axios from 'axios'
+import { ref } from 'vue'
 
-axios.get('https://medium.com/feed/@lcao_5526')
+const articles = ref([])
+
+axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/featured-articles/')
   .then((response) => {
-    console.log(response.data)
+    articles.value = response.data
   })
   .catch((error) => {
     console.log(error)
@@ -11,24 +14,20 @@ axios.get('https://medium.com/feed/@lcao_5526')
 </script>
 
 <template>
-  <v-card color="teal-lighten-3">
-    <v-card-title>w Blogging</v-card-title>
-    <v-card-text>
-      <img src="https://source.unsplash.com/1600x900/?blog" alt="Home" />
-      A place to write your w blogs!
-    </v-card-text>
-  </v-card>
-  <v-card color="teal-lighten-3">
-    <v-card-title>One-Stop Reading</v-card-title>
-    <v-card-text>
-      <img src="https://source.unsplash.com/1600x900/?read" alt="Home" />
-      A place to read your favorate RSS feeds!
-    </v-card-text>
-  </v-card>
+  <v-container>
+    <v-row rows="3" justify="center">
+      <v-col cols="6" v-for="article in articles" :key="article.id">
+        <v-card height="500" class="overflow-hidden">
+          <v-card-title>
+            <a :href="article.link" target="_blank">{{ article.title }}</a>
+          </v-card-title>
+          <v-card-subtitle v-if="article.published">{{ article.published }}</v-card-subtitle>
+          <v-card-text v-html="article.summary"></v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <style scoped>
-a {
-  text-align: center;
-}
 </style>

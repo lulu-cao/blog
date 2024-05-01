@@ -63,9 +63,9 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to,_,next)=>{
+router.beforeEach(async (to,_,next)=>{
   if (to.meta.middleware) {
-    const middleware = require(`../middleware/${to.meta.middleware}`);
+    const middleware = await import (`../middleware/${to.meta.middleware}.js`);
     if (middleware) {
       middleware.default(useAuthStore(), next);
     } else {
