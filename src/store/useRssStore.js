@@ -18,7 +18,9 @@ export const useRssStore = defineStore('rss', () => {
         .then((response) => {
           if (response.data && response.data.length !== 0) {
             response.data.forEach((feed) => {
-              userFeeds.value.push(feed.rss_cache)
+              feed.rss_cache.forEach((item) => {
+                userFeeds.value.push(item)
+              })
             })
             if (userFeeds.value && userFeeds.value.length !== 0) {
               userHasFeeds.value = true
@@ -33,5 +35,24 @@ export const useRssStore = defineStore('rss', () => {
       console.log(error)
     })
 
-  return { userUid, userRecordId, userFeeds, userHasFeeds }
+    const setUserFeeds = (url) => {
+      axios.get(`https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/rss-feeds/?url=${url}&user=${userRecordId.value}`)
+        .then((response) => {
+          if (response.data && response.data.length !== 0) {
+            response.data.forEach((feed) => {
+              feed.rss_cache.forEach((item) => {
+                userFeeds.value.push(item)
+              })
+            })
+            if (userFeeds.value && userFeeds.value.length !== 0) {
+              userHasFeeds.value = true
+            }
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
+
+  return { userUid, userRecordId, userFeeds, userHasFeeds, setUserFeeds }
 });

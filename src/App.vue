@@ -43,7 +43,6 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 const list = [
   { title: "Home", to: "/" },
   { title: "Explore", to: "/explore" },
-  { title: "Blog", to: "/blog" },
   { title: "RSS", to: "/rss" },
   { title: "Account", to: "/account" },
 ];
