@@ -1,5 +1,5 @@
 <template>
-  restaurants
+  Personal Blog
 </template>
 
 <script>

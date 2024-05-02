@@ -5,25 +5,10 @@ export const useAuthStore = defineStore('auth', () => {
   const authenticated = ref(false);
   const addAuthentication = () => authenticated.value = true;
   const cancelAuthentication = () => authenticated.value = false;
+  const currentUserUid = ref(null);
+  const setCurrentUserUid = (uid) => currentUserUid.value = uid;
+  const currentUserEmail = ref(null);
+  const setCurrentUserEmail = (email) => currentUserEmail.value = email;
 
-  return { authenticated, addAuthentication, cancelAuthentication }
+  return { authenticated, addAuthentication, cancelAuthentication, currentUserUid, setCurrentUserUid, currentUserEmail, setCurrentUserEmail}
 });
-
-// Tried below two versions; not sure why they're not working
-// Version 1
-// const useAuthStore = defineStore('auth', () => {
-//   const authenticated = ref(false);
-
-//   return { authenticated }
-// });
-
-// export default { useAuthStore };
-
-// Version 2
-// const useAuthStore = defineStore('auth', () => {
-//   const authenticated = ref(false);
-
-//   return { authenticated }
-// });
-
-// export default useAuthStore;
