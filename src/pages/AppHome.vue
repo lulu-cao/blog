@@ -20,14 +20,13 @@
   <div>
     <Posts @toggle-status="toggleStatus" @delete-post="deletePost" :posts="posts"/>
   </div>
-  <Alerts v-if="isAlertOpen" @closeSuccessAlert="closeSuccessAlert" :isSuccessAlertOpen="isSuccessAlertOpen" /> -->
+  -->
 </template>
 
 <script>
 import Posts from '../components/Posts.vue'
 import AddPost from './AddPost.vue'
 import Slider from '../components/Slider.vue'
-import Alerts from '../components/Alerts.vue'
 import { usePostStore } from '@/store/usePostStore'
 
 export default {
@@ -36,7 +35,6 @@ export default {
     Posts,
     AddPost,
     Slider,
-    Alerts,
   },
   data() {
     return {
@@ -58,44 +56,11 @@ export default {
       this.isAlertOpen = true;
       this.isSuccessAlertOpen = true;
     },
-    closeSuccessAlert() {
-      this.isSuccessAlertOpen = false;
-      this.isAlertOpen = false;
-    },
     toggleStatus(id) {
       this.posts = this.posts.map((post) =>
         post.id === id ? { ...post, unfinished: !post.unfinished } : post
       )
     },
-    // Example code for fetching data from the backend API
-    // async fetchPosts() {
-    //   const res = await fetch('https://backend')
-    //   const data = await res.json()
-    //   return data
-    // }
-    // async fetchPost(id) {
-    //   const res = await fetch(`https://backend/${id}`)
-    //   const data = await res.json()
-    //   return data
-    // }
-
-
-    // Correspondingly, the front-end will receive data in created()
-    // async created() { this.posts = await this.fetchPosts() }
-
-
-    // Correspondingly, to add a post, we can change the method to below
-    // async addPost(post) {
-    // const res = await fetch('https://backend', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-type': 'application/json',
-    //   },
-    //   body: JSON.stringify(post),
-    // })
-    // const data = await res.json()
-    // this.posts = [...this.posts, data]
-    // }
   },
   created() {
     this.posts = [

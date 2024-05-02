@@ -1,28 +1,23 @@
+<script setup>
+import { onMounted } from 'vue';
+
+const emit = defineEmits(["closeAlert"]);
+const props = defineProps(["title", "text", "icon", "type"]);
+
+onMounted(()=>{
+  setTimeout(() => {
+    emit("closeAlert");
+  }, 5000);
+})
+</script>
+
 <template>
-  <div class="w-full min-h-fit fixed bottom-0">
-    <button @click="closeAlert" class="text-white mr-1 ml-auto block" >x</button>
-    <p class="text-white text-center mb-3">
-      <slot>Success!</slot>
-    </p>
-  </div>
+  <v-alert
+    :text="props.text"
+    :icon="props.icon"
+    :title="props.title"
+    :type="props.type"
+    close-icon="$close"
+  />
 </template>
 
-<script>
-import { onMounted } from 'vue';
-export default {
-  emits: ["closeAlert"],
-  setup(_, { emit }) {
-    const closeAlert = () => {
-      emit("closeAlert");
-    };
-
-    onMounted(()=>{
-      setTimeout(() => {
-        emit("closeAlert");
-      }, 5000);
-    })
-
-    return { closeAlert }
-  }
-}
-</script>

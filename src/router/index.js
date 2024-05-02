@@ -44,6 +44,11 @@ const routes = [
     component: SigninSignup,
   },
   {
+    path: '/logout',
+    name: 'Logout',
+    component: SigninSignup,
+  },
+  {
     path: '/new',
     name: 'AddPost',
     component: AddPost,

@@ -1,14 +1,15 @@
 <script setup>
 import Button from './Button.vue';
-import { ref, computed } from 'vue';
+import { useAuthStore } from '@/store/useAuthStore';
+import { ref, onMounted } from 'vue';
 import { useTheme } from 'vuetify';
-import { useRoute } from 'vue-router';
-import { usePostStore } from '@/store/usePostStore';
-import { useLoginStore } from '@/store/useLoginStore';
+import { useRouter } from 'vue-router';
+import * as firebase from '../utilities/firebase.js';
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
-const props = defineProps({
-  authorized: { type: Boolean, default: undefined, required: true }
-});
+const auth = getAuth();
+const router = useRouter();
+const isAuthorized = ref(false);
 
 const isDarkTheme = ref(true);
 const theme = useTheme();
@@ -17,8 +18,26 @@ const changeTheme = () => {
   theme.global.name = theme.global.current.dark ? 'light' : 'dark'
 };
 
-const store = usePostStore();
-const loginStore = useLoginStore();
+function logout() {
+  signOut(auth).then(() => {
+    isLoggingOut.value = true;
+  }).catch((error) => {
+    console.log(error);
+  });
+  router.push('/logout');
+};
+
+onMounted(()=>{
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isAuthorized.value = true;
+      useAuthStore().addAuthentication();
+    } else {
+      isAuthorized.value = false;
+      useAuthStore().cancelAuthentication();
+    }
+  });
+})
 </script>
 
 <template>
@@ -33,7 +52,7 @@ const loginStore = useLoginStore();
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
     </template>
 
-    <v-app-bar-title>Symposia</v-app-bar-title>
+    <v-app-bar-title>Quiet Reading Room</v-app-bar-title>
 
     <v-spacer></v-spacer>
 
@@ -42,10 +61,10 @@ const loginStore = useLoginStore();
     </v-btn>
 
     <Button
-      @btn-click="$emit('logout')"
-      v-if="authorized"
+      @click="logout"
+      v-if="isAuthorized"
     >
-    Sign Out
+      Sign Out
     </Button>
     <Button
       @click="$router.push('/login')"

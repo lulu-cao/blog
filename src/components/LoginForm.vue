@@ -11,10 +11,14 @@ const isLoading = ref(false);
 const store = useLoginStore();
 const router = useRouter();
 const authStore = useAuthStore();
-const emit = defineEmits(['showSuccessAlert']);
+const emit = defineEmits(['showLoginSuccess', 'showLoginFailure']);
 
-function showAlert() {
-  emit('showSuccessAlert')
+function showSuccessAlert() {
+  emit('showLoginSuccess')
+};
+
+function showFailureAlert(error) {
+  emit('showLoginFailure', error)
 };
 
 function submitLogin() {
@@ -31,33 +35,36 @@ function submitLogin() {
       authStore.setCurrentUserEmail(user.email)
       console.log(user);
       isLoading.value = false;
-      showAlert();
-      router.push('/explore')
+      showSuccessAlert();
+      setTimeout(() => {
+        router.push('/rss')
+      }, 2000);
     })
     .catch((error) => {
       const errorCode = error.code;
-      const errorMessage = error.message;
+      let errorMessage = error.message;
       console.log(errorCode + errorMessage);
       if (errorCode === "auth/wrong-password") {
-        console.log("Wrong password")
+        password.value = ""
+        errorMessage = "Sorry, your password is incorrect. Please try again."
       } else if (errorCode === "auth/user-not-found") {
-        console.log("User not found")
+        email.value = ""
+        password.value = ""
+        errorMessage = "Sorry, this email is not registered. Please try again."
       };
       isLoading.value = false;
-      password.value = ""
+      showFailureAlert(errorMessage);
     });
 };
 
 onMounted(() => {store.isLoginOpen ? emailRef.value.focus() : ""});
 
-const firstName = ref('');
-const lastName = ref('');
 const email = ref('');
 const password = ref('');
-const remember = ref(false);
 
 const rules = {
   required: (v) => !!v || 'Required.',
+  email: (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
 };
 </script>
 
@@ -74,14 +81,14 @@ const rules = {
       <v-row justify="center">
         <v-col cols="4">
           <v-card class="pa-4 mix-auto" width="300">
-            <v-card-title>Login</v-card-title>
+            <v-card-title class="text-center">Login</v-card-title>
             <v-card-item>
               <v-form fast-fail @submit.prevent="submitLogin">
                 <v-text-field
                   prepend-inner-icon="mdi-email"
                   v-model="email"
-                  :rules="[rules.required]"
-                  label="Email"
+                  :rules="[rules.required, rules.email]"
+                  label="Username / Email"
                   ref="emailRef"
                 ></v-text-field>
 
@@ -92,11 +99,6 @@ const rules = {
                   label="Password"
                   type="password"
                 ></v-text-field>
-
-                <v-checkbox
-                  v-model="remember"
-                  label="Remember me"
-                ></v-checkbox>
 
                 <v-btn class="mt-2" type="submit" block>Submit</v-btn>
                 <v-btn @click="$emit('register')" class="mt-2" block>Register</v-btn>

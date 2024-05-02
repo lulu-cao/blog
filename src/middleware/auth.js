@@ -1,9 +1,8 @@
-import { useLoginStore } from "../store/useLoginStore";
+import { useAuthStore } from "../store/useAuthStore";
 
 export default function(store, next) {
   if ( store.authenticated === false ) {
-    next("/");
-    useLoginStore().setLoginOpen(true)
+    next("/login");
   } else {
     next()
   }
