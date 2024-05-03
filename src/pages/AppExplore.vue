@@ -18,7 +18,7 @@ axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/featured-artic
     <v-row rows="3">
       <v-col cols="6" v-for="article in articles" :key="article.id">
         <a :href="article.link" target="_blank">
-          <v-card height="500" class="overflow-hidden">
+          <v-card height="500" class="overflow-auto">
             <v-card-title class="h-96">
               <div class="title-wrapper">{{ article.title }}</div>
             </v-card-title>
@@ -46,5 +46,11 @@ axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/featured-artic
   right: 0;
   height: 100px;
   background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 </style>

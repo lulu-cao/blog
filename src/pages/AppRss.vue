@@ -36,6 +36,7 @@ const toggleFilter = () => {
   if (!isFiltering.value) {
     isAddingFeed.value = false;
   }
+  feedUrl.value = '';
   isFiltering.value = !isFiltering.value;
 }
 
@@ -364,7 +365,7 @@ const filterFeeds = () => {
     </v-card>
     <v-row rows="3" v-if="!filtered">
       <v-col cols="6" v-for="article in userFeeds" :key="article.id">
-        <v-card height="500" class="overflow-hidden">
+        <v-card height="500" class="overflow-auto">
           <v-card-title>
             <a :href="article.link" target="_blank">{{ article.title }}</a>
           </v-card-title>
@@ -375,7 +376,7 @@ const filterFeeds = () => {
     </v-row>
     <v-row rows="3" v-if="filtered">
       <v-col cols="6" v-for="article in filteredFeeds" :key="article.id">
-        <v-card height="500" class="overflow-hidden">
+        <v-card height="500" class="overflow-auto">
           <v-card-title>
             <a :href="article.link" target="_blank">{{ article.title }}</a>
           </v-card-title>
@@ -401,5 +402,11 @@ const filterFeeds = () => {
   right: 0;
   height: 100px;
   background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 </style>
