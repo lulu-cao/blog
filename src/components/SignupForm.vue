@@ -43,6 +43,7 @@ function submitSignup() {
       const user = userCredential.user;
       authStore.setCurrentUserUid(user.uid)
       authStore.setCurrentUserEmail(user.email)
+      localStorage.setItem('user', JSON.stringify(user.uid));
       axios.post('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/users/', {
         uid: user.uid,
       }).then((response) => {

@@ -16,8 +16,12 @@ npm run dev
     npm run build
     ```
 
-2. Copy and paste the `/dist` folder into gh-pages branch. Add, commit, push. Then, force the update with your `dist` folder
+2. Switch to `gh-pages` branch and remove the files there with `git rm -rf .`.
+
+3. Copy and paste the `/dist` folder into `gh-pages` branch. Then, force the update with your `dist` folder:
     ```
+    git add .
+    git commit -m "deploy"
     git subtree split --prefix dist -b temp-branch
     git push origin temp-branch:gh-pages --force
     git branch -D temp-branch

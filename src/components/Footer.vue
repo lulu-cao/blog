@@ -15,7 +15,7 @@ const links = [{
 </script>
 
 <template>
-  <v-footer class="bg-teal">
+  <v-footer class="bg-teal sm:max-h-40 md:max-h-32">
     <v-img
         gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"
       ></v-img>

@@ -6,10 +6,13 @@ import { useTheme } from 'vuetify';
 import { useRouter } from 'vue-router';
 import * as firebase from '../utilities/firebase.js';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { useRssStore } from '@/store/useRssStore';
 
 const auth = getAuth();
 const router = useRouter();
+const rssStore = useRssStore();
 const isAuthorized = ref(false);
+const isLoggingOut = ref(false);
 
 // TODO: Implement theme change
 // const isDarkTheme = ref(true);
@@ -22,7 +25,9 @@ const isAuthorized = ref(false);
 function logout() {
   signOut(auth).then(() => {
     isLoggingOut.value = true;
-    localStorage.removeItem('user');
+    if (rssStore) {
+      rssStore.clearUserRecord();
+    }
   }).catch((error) => {
     console.log(error);
   });
@@ -37,6 +42,9 @@ onMounted(()=>{
     } else {
       isAuthorized.value = false;
       useAuthStore().cancelAuthentication();
+      if (rssStore) {
+        rssStore.clearUserRecord();
+      }
     }
   });
 })

@@ -12,6 +12,21 @@ const isStartingFilters = ref(false);
 const isFilterSuccessAlertOpen = ref(false);
 
 onMounted(() => {
+  if (rssStore) {
+    console.log('component mounted, getting user feeds');
+    rssStore.getUserRecordId();
+    rssStore.setUserFeeds();
+  }
+  const interval = setInterval(() => {
+    if (!rssStore.userRecordId) {
+      console.log('waiting for user record id');
+      rssStore.getUserRecordId();
+      rssStore.setUserFeeds();
+    } else {
+      clearInterval(interval);
+    }
+  }, 30);
+
   filterFeeds.value = userFeeds.value;
 });
 
@@ -191,6 +206,11 @@ const filterFeeds = () => {
   setTimeout(() => {
     isFilterSuccessAlertOpen.value = false;
   }, 5000);
+}
+
+const formatFeedDate = (date) => {
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+  return new Date(date).toLocaleDateString('en-US', options).replace(',', '');
 }
 
 // TODO: replace manual date fields with v-date-picker
@@ -375,7 +395,7 @@ const filterFeeds = () => {
           <v-card-title>
             <a :href="article.link" target="_blank">{{ article.title }}</a>
           </v-card-title>
-          <v-card-subtitle v-if="article.published">{{ article.published }}</v-card-subtitle>
+          <v-card-subtitle v-if="article.published">{{ formatFeedDate(article.published) }}</v-card-subtitle>
           <v-card-text v-html="article.summary"></v-card-text>
         </v-card>
       </v-col>
@@ -386,7 +406,7 @@ const filterFeeds = () => {
           <v-card-title>
             <a :href="article.link" target="_blank">{{ article.title }}</a>
           </v-card-title>
-          <v-card-subtitle v-if="article.published">{{ article.published }}</v-card-subtitle>
+          <v-card-subtitle v-if="article.published">{{ formatFeedDate(article.published) }}</v-card-subtitle>
           <v-card-text v-html="article.summary"></v-card-text>
           <div class="fade-effect"></div>
         </v-card>

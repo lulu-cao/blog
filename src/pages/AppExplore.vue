@@ -11,6 +11,11 @@ axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/featured-artic
   .catch((error) => {
     console.log(error)
   })
+
+const formatFeedDate = (date) => {
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+  return new Date(date).toLocaleDateString('en-US', options).replace(',', '');
+}
 </script>
 
 <template>
@@ -22,10 +27,10 @@ axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/featured-artic
             <v-card-title class="h-96">
               <div class="title-wrapper">{{ article.title }}</div>
             </v-card-title>
-            <v-card-subtitle v-if="article.published">{{ article.published }}</v-card-subtitle>
+            <v-card-subtitle v-if="article.published">{{ formatFeedDate(article.published) }}</v-card-subtitle>
             <v-card-text v-html="article.summary"></v-card-text>
-            <div class="fade-effect"></div>
           </v-card>
+          <div class="fade-effect absolute bottom-0"></div>
         </a>
       </v-col>
     </v-row>
@@ -40,12 +45,9 @@ axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/featured-artic
 }
 
 .fade-effect {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  width: 100%;
   height: 100px;
-  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+  background: linear-gradient(to bottom, rgba(255,255,255,0), black);
 }
 
 *::-webkit-scrollbar {

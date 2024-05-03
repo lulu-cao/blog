@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useAuthStore } from "./useAuthStore";
 import { ref } from 'vue';
 import axios from 'axios'
 
@@ -7,7 +8,10 @@ export const useRssStore = defineStore('rss', () => {
   const userRecordId = ref(null)
   const userFeeds = ref([])
   const userHasFeeds = ref(false)
+  const authStore = useAuthStore()
 
+  console.log('authStore.authenticated');
+  console.log(authStore?.authenticated);
   userUid.value = JSON.parse(localStorage.getItem('user'))
   console.log(userUid.value);
 
@@ -17,12 +21,7 @@ export const useRssStore = defineStore('rss', () => {
       axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/rss-feeds/?user=' + userRecordId.value)
         .then((response) => {
           if (response.data && response.data.length !== 0) {
-            console.log('response.data');
-            console.log(response.data);
-
             response.data.forEach((feed) => {
-              console.log('feed.rss_cache');
-              console.log(feed.rss_cache);
               feed.rss_cache.forEach((item) => {
                 userFeeds.value.push(item)
               })
@@ -40,7 +39,17 @@ export const useRssStore = defineStore('rss', () => {
       console.log(error)
     })
 
+    const clearUserRecord = () => {
+      localStorage.removeItem('user');
+      userUid.value = null
+      userRecordId.value = null
+    }
+
     const getUserRecordId = () => {
+      userUid.value = JSON.parse(localStorage.getItem('user'))
+
+      if (!userUid.value) return;
+
       axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/users/')
         .then((response) => {
           userRecordId.value = response.data.filter((user) => user.uid === userUid.value)[0].id;
@@ -53,6 +62,8 @@ export const useRssStore = defineStore('rss', () => {
     }
 
     const setUserFeeds = (url) => {
+      if (!userRecordId.value) return;
+      userFeeds.value = []
       axios.get(`https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/rss-feeds/?url=${url}&user=${userRecordId.value}`)
         .then((response) => {
           if (response.data && response.data.length !== 0) {
@@ -71,5 +82,5 @@ export const useRssStore = defineStore('rss', () => {
         })
     }
 
-  return { userUid, userRecordId, userFeeds, userHasFeeds, getUserRecordId, setUserFeeds }
+  return { userUid, userRecordId, userFeeds, userHasFeeds, getUserRecordId, setUserFeeds, clearUserRecord }
 });
