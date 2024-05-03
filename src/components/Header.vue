@@ -11,16 +11,18 @@ const auth = getAuth();
 const router = useRouter();
 const isAuthorized = ref(false);
 
-const isDarkTheme = ref(true);
-const theme = useTheme();
-const changeTheme = () => {
-  isDarkTheme.value = !isDarkTheme.value;
-  theme.global.name = theme.global.current.dark ? 'light' : 'dark'
-};
+// TODO: Implement theme change
+// const isDarkTheme = ref(true);
+// const theme = useTheme();
+// const changeTheme = () => {
+//   isDarkTheme.value = !isDarkTheme.value;
+//   theme.global.name = theme.global.current.dark ? 'light' : 'dark'
+// };
 
 function logout() {
   signOut(auth).then(() => {
     isLoggingOut.value = true;
+    localStorage.removeItem('user');
   }).catch((error) => {
     console.log(error);
   });
@@ -38,6 +40,8 @@ onMounted(()=>{
     }
   });
 })
+
+defineEmits(['toggleNavDrawer']);
 </script>
 
 <template>
@@ -49,16 +53,16 @@ onMounted(()=>{
     </template>
 
     <template v-slot:prepend>
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="$emit('toggleNavDrawer')"></v-app-bar-nav-icon>
     </template>
 
-    <v-app-bar-title>Quiet Reading Room</v-app-bar-title>
+    <v-app-bar-title>VibeReads</v-app-bar-title>
 
     <v-spacer></v-spacer>
 
-    <v-btn icon @click="changeTheme">
+    <!-- <v-btn icon @click="changeTheme">
       <v-icon :icon="isDarkTheme ? 'mdi-white-balance-sunny' : 'mdi-weather-night'"></v-icon>
-    </v-btn>
+    </v-btn> -->
 
     <Button
       @click="logout"

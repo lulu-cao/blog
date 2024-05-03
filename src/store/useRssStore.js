@@ -17,7 +17,12 @@ export const useRssStore = defineStore('rss', () => {
       axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/rss-feeds/?user=' + userRecordId.value)
         .then((response) => {
           if (response.data && response.data.length !== 0) {
+            console.log('response.data');
+            console.log(response.data);
+
             response.data.forEach((feed) => {
+              console.log('feed.rss_cache');
+              console.log(feed.rss_cache);
               feed.rss_cache.forEach((item) => {
                 userFeeds.value.push(item)
               })

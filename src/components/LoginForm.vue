@@ -80,7 +80,7 @@ const rules = {
       </v-overlay>
       <v-row justify="center">
         <v-col cols="4">
-          <v-card class="pa-4 mix-auto" width="300">
+          <v-card class="pa-4">
             <v-card-title class="text-center">Login</v-card-title>
             <v-card-item>
               <v-form fast-fail @submit.prevent="submitLogin">

@@ -1,8 +1,7 @@
 <template>
-  <!-- Binding the value of "authorized" to the variable "authorized" and pass it to the child as a prop -->
   <v-app>
-    <Header />
-    <v-navigation-drawer>
+    <Header @toggle-nav-drawer="toggleNavBar" />
+    <v-navigation-drawer v-if="isDrawingOpen">
       <v-list>
         <v-list-item v-for="route in list" :key="route.to">
           <router-link :to="route.to">{{ route.title }}</router-link>
@@ -24,11 +23,16 @@
 <script setup>
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
+import { ref } from 'vue'
 
 const list = [
   { title: "Home", to: "/" },
   { title: "Explore", to: "/explore" },
   { title: "RSS", to: "/rss" },
-  { title: "Account", to: "/account" },
 ];
+
+const isDrawingOpen = ref(true);
+const toggleNavBar = () => {
+  isDrawingOpen.value = !isDrawingOpen.value;
+};
 </script>
