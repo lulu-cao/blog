@@ -40,6 +40,18 @@ export const useRssStore = defineStore('rss', () => {
       console.log(error)
     })
 
+    const getUserRecordId = () => {
+      axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/users/')
+        .then((response) => {
+          userRecordId.value = response.data.filter((user) => user.uid === userUid.value)[0].id;
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
+      return userRecordId.value
+    }
+
     const setUserFeeds = (url) => {
       axios.get(`https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/rss-feeds/?url=${url}&user=${userRecordId.value}`)
         .then((response) => {
@@ -59,5 +71,5 @@ export const useRssStore = defineStore('rss', () => {
         })
     }
 
-  return { userUid, userRecordId, userFeeds, userHasFeeds, setUserFeeds }
+  return { userUid, userRecordId, userFeeds, userHasFeeds, getUserRecordId, setUserFeeds }
 });

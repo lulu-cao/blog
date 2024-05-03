@@ -51,9 +51,15 @@ const addFeed = () => {
     return
   }
   isFeedBeingSent.value = true;
+
+  let userRecordId;
+  if (!rssStore.userRecordId) {
+    userRecordId = rssStore.getUserRecordId();
+  }
+
   axios.post('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/cache-rss-feed/', {
     url: feedUrl.value,
-    user: rssStore.userRecordId
+    user: rssStore.userRecordId || userRecordId
   }).then(() => {
     isFeedBeingSent.value = false;
     isFeedCacheSuccess.value = true;

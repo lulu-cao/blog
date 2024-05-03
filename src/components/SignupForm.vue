@@ -5,6 +5,7 @@ import { ref, onMounted } from 'vue';
 import { useLoginStore } from '@/store/useLoginStore.js';
 import { useAuthStore } from '@/store/useAuthStore.js';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -42,7 +43,13 @@ function submitSignup() {
       const user = userCredential.user;
       authStore.setCurrentUserUid(user.uid)
       authStore.setCurrentUserEmail(user.email)
-      console.log(user);
+      axios.post('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/users/', {
+        uid: user.uid,
+      }).then((response) => {
+        console.log(response);
+      }).catch((error) => {
+        console.log(error);
+      });
       router.push('/rss')
       isLoading.value = false;
       email.value = "";
