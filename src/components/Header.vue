@@ -30,11 +30,11 @@ const isLoggingOut = ref(false);
 
 function logout() {
   if (isLoggingOut.value) return;
-
   isLoggingOut.value = true;
 
   signOut(auth).then(() => {
     authStore.cancelAuthentication();
+    isLoggingOut.value = false;
   }).catch((error) => {
     console.error(error);
   });

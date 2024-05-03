@@ -37,7 +37,7 @@ function submitSignup() {
   createUserWithEmailAndPassword(auth, email.value, password.value)
     .then((userCredential) => {
       const user = userCredential.user;
-      authStore.addAuthentication(JSON.stringify(user.uid), true);
+      authStore.addAuthentication(user.uid, true);
       isLoading.value = false;
       showSuccessAlert();
       setTimeout(() => {

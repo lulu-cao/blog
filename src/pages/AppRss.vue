@@ -1,32 +1,21 @@
 <script setup>
 import Alert from '@/components/Alert.vue';
 import { onMounted, ref, computed } from 'vue'
-import { useRssStore } from '@/store/useRssStore'
-import axios from 'axios';
+import { useAuthStore } from '@/store/useAuthStore';
+import axios from '@/plugins/axios';
 
-const rssStore = useRssStore();
-const userFeeds = computed(() => rssStore.userFeeds);
+const authStore = useAuthStore();
+const userFeeds = computed(() => {
+  if (authStore && authStore.userFeeds) {
+    return authStore.userFeeds;
+  }
+});
 const filteredFeeds = ref([]);
 const filterForm = ref(null);
 const isStartingFilters = ref(false);
 const isFilterSuccessAlertOpen = ref(false);
 
 onMounted(() => {
-  if (rssStore) {
-    console.log('component mounted, getting user feeds');
-    rssStore.getUserRecordId();
-    rssStore.setUserFeeds();
-  }
-  const interval = setInterval(() => {
-    if (!rssStore.userRecordId) {
-      console.log('waiting for user record id');
-      rssStore.getUserRecordId();
-      rssStore.setUserFeeds();
-    } else {
-      clearInterval(interval);
-    }
-  }, 30);
-
   filterFeeds.value = userFeeds.value;
 });
 
@@ -35,9 +24,7 @@ const isFiltering = ref(false);
 const filtered = ref(false);
 
 const toggleAddFeed = () => {
-  if (isStartingFilters.value) {
-    return
-  }
+  if (isStartingFilters.value) return
   if (!isAddingFeed.value) {
     isFiltering.value = false;
   }
@@ -67,19 +54,16 @@ const addFeed = () => {
   }
   isFeedBeingSent.value = true;
 
-  let userRecordId;
-  if (!rssStore.userRecordId) {
-    userRecordId = rssStore.getUserRecordId();
-  }
-
-  axios.post('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/cache-rss-feed/', {
+  axios.post('cache-rss-feed/', {
     url: feedUrl.value,
-    user: rssStore.userRecordId || userRecordId
+    user: authStore.userDjangoId,
   }).then(() => {
     isFeedBeingSent.value = false;
     isFeedCacheSuccess.value = true;
-    rssStore.setUserFeeds(feedUrl.value);
     toggleAddFeed();
+    setTimeout(() => {
+      window.location.reload();
+    }, 3500);
 
     setTimeout(() => {
       isFeedCacheSuccess.value = false;
@@ -120,7 +104,7 @@ const dateRules = {
   allOrNone: allOrNone() || 'Required'
 }
 
-const formatDate = () => {
+const formatFilterDate = () => {
   if (!year.value && !month.value && !day.value && !hour.value) {
     return '';
   }
@@ -156,7 +140,7 @@ const filterFeeds = () => {
   if (isStartingFilters.value) {
     return
   }
-  published.value = formatDate();
+  published.value = formatFilterDate();
   isStartingFilters.value = true;
   if (!title.value && !description.value && !published.value) {
     isStartingFilters.value = false;
@@ -230,7 +214,7 @@ const formatFeedDate = (date) => {
     <Alert
       v-if="isFeedCacheSuccess"
       title="Success"
-      text="Your feed url has been added successfully."
+      text="Your feed url has been added successfully. We will reload the page to apply changes."
       type="success"
       icon="$success"
     />
@@ -408,7 +392,7 @@ const formatFeedDate = (date) => {
           </v-card-title>
           <v-card-subtitle v-if="article.published">{{ formatFeedDate(article.published) }}</v-card-subtitle>
           <v-card-text v-html="article.summary"></v-card-text>
-          <div class="fade-effect"></div>
+          <!-- <div class="fade-effect"></div> -->
         </v-card>
       </v-col>
       <v-col cols="12" v-if="filteredFeeds.length === 0">
@@ -421,6 +405,7 @@ const formatFeedDate = (date) => {
 </template>
 
 <style scoped>
+/* TODO: add fade effect to bottom of cards */
 .fade-effect {
   position: absolute;
   bottom: 0;
