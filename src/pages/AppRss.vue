@@ -9,6 +9,7 @@ const userFeeds = computed(() => rssStore.userFeeds);
 const filteredFeeds = ref([]);
 const filterForm = ref(null);
 const isStartingFilters = ref(false);
+const isFilterSuccessAlertOpen = ref(false);
 
 onMounted(() => {
   filterFeeds.value = userFeeds.value;
@@ -89,30 +90,42 @@ const allOrNone = () => {
   return !anyFilled || allFilled;
 }
 
-const dateRules = [
-  {beforeAfter: [
-    v => !!v || allOrNone() || 'Before/After is required'
-  ]},
-  {year: [
-    v => !!v || allOrNone() || 'Year is required',
-    v => (/^\d{4}$/).test(v) || 'Year must be a 4-digit number'
-  ]},
-  {month: [
-    v => !!v || allOrNone() || 'Month is required',
-    v => v > 0 && v <= 12 || 'Month must be between 1 and 12'
-  ]},
-  {day: [
-    v => !!v || allOrNone() || 'Day is required',
-    v => v > 0 && v <= 31 || 'Day must be between 1 and 31'
-  ]},
-  {hour: [
-    v => !!v || allOrNone() || 'Hour is required',
-    v => v >= 0 && v < 24 || 'Hour must be between 0 and 23'
-  ]},
-  {amPm: [
-    v => !!v || allOrNone() || 'AM/PM is required'
-  ]}
-]
+const dateRules = {
+  year: v => (/^\d{4}$/).test(v) || allOrNone() || 'Year must be a 4-digit number',
+  month: v => v > 0 && v <= 12 || allOrNone() || 'Month must be between 1 and 12',
+  day: v => v > 0 && v <= 31 || allOrNone() || 'Day must be between 1 and 31',
+  hour: v => v >= 0 && v < 24 || allOrNone() || 'Hour must be between 0 and 23',
+  allOrNone: allOrNone() || 'Required'
+}
+
+const formatDate = () => {
+  if (!year.value && !month.value && !day.value && !hour.value) {
+    return '';
+  }
+
+  if (!year.value) year.value = new Date().getFullYear();
+  if (!month.value) month.value = new Date().getMonth() + 1;
+  if (!day.value) day.value = new Date().getDate();
+  if (!hour.value) hour.value = new Date().getHours();
+
+  let hourAdjusted = parseInt(hour.value);
+  if (!amPm.value) {
+    amPm.value = 'AM';
+  }
+
+  if (amPm.value === 'PM' && hourAdjusted < 12) {
+    hourAdjusted += 12;
+  }
+  if (amPm.value === 'AM' && hourAdjusted === 12) {
+    hourAdjusted = 0;
+  }
+
+  const paddedMonth = String(month.value).padStart(2, '0');
+  const paddedDay = String(day.value).padStart(2, '0');
+  const paddedHour = String(hourAdjusted).padStart(2, '0');
+
+  return `${year.value}-${paddedMonth}-${paddedDay}T${paddedHour}:04:00.001000Z`;
+}
 
 const filterFeeds = () => {
   if (!filterForm.value.validate()) {
@@ -121,29 +134,56 @@ const filterFeeds = () => {
   if (isStartingFilters.value) {
     return
   }
+  published.value = formatDate();
   isStartingFilters.value = true;
-  console.log(title.value);
-  console.log(description.value);
-  console.log(published.value);
   if (!title.value && !description.value && !published.value) {
     isStartingFilters.value = false;
     filtered.value = false;
     return
   }
-  filteredFeeds.value = rssStore.userFeeds.filter((feed) => {
-    if (title.value) {
-      console.log(feed.title);
-      return feed.title.includes(title.value)
+
+  filteredFeeds.value = userFeeds.value.filter((feed) => {
+    let match = true; // Start assuming a feed matches
+
+    if (title.value && feed.title) {
+      match = match && feed.title.toLowerCase().includes(title.value.toLowerCase());
     }
-    if (description.value) {
-      return feed.description.includes(description.value)
+    if (description.value && feed.description) {
+      match = match && feed.description.toLowerCase().includes(description.value.toLowerCase());
     }
-    if (published.value) {
-      return feed.published.includes(published.value)
+    if (published.value && feed.published) {
+      const feedDate = new Date(feed.published);
+      const userDate = new Date(published.value);
+
+      if (beforeAfter.value === 'before') {
+        match = match && feedDate < userDate;
+      } else if (beforeAfter.value === 'after') {
+        match = match && feedDate > userDate;
+      } else {
+        match = match && feedDate.toISOString().split('T')[0] === userDate.toISOString().split('T')[0];
+      }
     }
+
+    return match;
   });
+
   isStartingFilters.value = false;
+
+  title.value = '';
+  description.value = '';
+  published.value = '';
+  beforeAfter.value = '';
+  year.value = '';
+  month.value = '';
+  day.value = '';
+  hour.value = '';
+  amPm.value = '';
+
   filtered.value = true;
+  isFilterSuccessAlertOpen.value = true;
+  setTimeout(() => {
+    isFilterSuccessAlertOpen.value = false;
+  }, 5000);
 }
 
 // TODO: replace manual date fields with v-date-picker
@@ -167,6 +207,13 @@ const filterFeeds = () => {
       type="success"
       icon="$success"
     />
+    <Alert
+      v-if="isFilterSuccessAlertOpen"
+      title="Success"
+      text="Your feeds have been filtered successfully."
+      type="success"
+      icon="$success"
+    />
     <v-toolbar
       dark
       prominent
@@ -175,7 +222,7 @@ const filterFeeds = () => {
       <v-spacer></v-spacer>
       <v-btn @click.prevent="toggleFilter">Filter</v-btn>
     </v-toolbar>
-    <v-card v-if="isAddingFeed" rounded="0">
+    <v-card v-if="isAddingFeed" rounded="0" class="mb-6">
       <v-form
         @submit.prevent="addFeed"
         fast-fail
@@ -199,7 +246,7 @@ const filterFeeds = () => {
         </div>
       </v-form>
     </v-card>
-    <v-card v-if="isFiltering">
+    <v-card v-if="isFiltering" class="mb-6">
       <v-form
         @submit.prevent="filterFeeds"
         fast-fail
@@ -224,35 +271,35 @@ const filterFeeds = () => {
             label="Published"
             outlined
             clearable
-            :rules="dateRules.beforeAfter"
+            :rules="[dateRules.allOrNone]"
           ></v-select>
           <v-text-field
             v-model="year"
             label="YYYY"
             outlined
             clearable
-            :rules="dateRules.year"
+            :rules="[dateRules.year]"
           ></v-text-field>
           <v-text-field
             v-model="month"
             label="MM"
             outlined
             clearable
-            :rules="dateRules.month"
+            :rules="[dateRules.month]"
           ></v-text-field>
           <v-text-field
             v-model="day"
             label="DD"
             outlined
             clearable
-            :rules="dateRules.day"
+            :rules="[dateRules.day]"
           ></v-text-field>
           <v-text-field
             v-model="hour"
             label="HH"
             outlined
             clearable
-            :rules="dateRules.hour"
+            :rules="[dateRules.hour]"
           ></v-text-field>
           <v-select
             v-model="amPm"
@@ -260,7 +307,7 @@ const filterFeeds = () => {
             label="AM"
             outlined
             clearable
-            :rules="dateRules.amPm"
+            :rules="[dateRules.allOrNone]"
           ></v-select>
         </v-row>
         <!-- <v-menu
@@ -334,8 +381,25 @@ const filterFeeds = () => {
           </v-card-title>
           <v-card-subtitle v-if="article.published">{{ article.published }}</v-card-subtitle>
           <v-card-text v-html="article.summary"></v-card-text>
+          <div class="fade-effect"></div>
+        </v-card>
+      </v-col>
+      <v-col cols="12" v-if="filteredFeeds.length === 0">
+        <v-card>
+          <v-card-title>No feeds found</v-card-title>
         </v-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
+
+<style scoped>
+.fade-effect {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+}
+</style>
