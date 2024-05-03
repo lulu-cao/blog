@@ -1,14 +1,28 @@
 import { defineStore } from "pinia";
 import { ref } from 'vue';
+import axios from '@/plugins/axios';
 
 export const useAuthStore = defineStore('auth', () => {
   const authenticated = ref(false);
-  const addAuthentication = () => authenticated.value = true;
-  const cancelAuthentication = () => authenticated.value = false;
-  const currentUserUid = ref(null);
-  const setCurrentUserUid = (uid) => currentUserUid.value = uid;
-  const currentUserEmail = ref(null);
-  const setCurrentUserEmail = (email) => currentUserEmail.value = email;
+  const addAuthentication = (uid, isSigningup) => {
+    localStorage.setItem('user', uid);
+    if (isSigningup) {
+      axios.post('users/', {
+        uid: user.uid,
+      }).then((response) => {
+        console.log("user created in django");
+        console.log(response.data);
+      }).catch((error) => {
+        console.error(error);
+      });
+    }
 
-  return { authenticated, addAuthentication, cancelAuthentication, currentUserUid, setCurrentUserUid, currentUserEmail, setCurrentUserEmail}
+    authenticated.value = true
+  };
+  const cancelAuthentication = () => {
+    localStorage.removeItem('user');
+    authenticated.value = false
+  };
+
+  return { authenticated, addAuthentication, cancelAuthentication}
 });

@@ -11,8 +11,6 @@ const props = defineProps(['isLoggingOut'])
 const route = useRoute()
 
 onMounted(()=>{
-  isSigningUp.value = false;
-
   if (route.path === '/logout') {
     isLoggingOut.value = true;
 
@@ -22,8 +20,8 @@ onMounted(()=>{
   }
 })
 
-const register = () => {
-  isSigningUp.value = true
+const toggleSignup = () => {
+  isSigningUp.value = !isSigningUp.value
 }
 
 const errorText = ref('')
@@ -97,15 +95,16 @@ const toggleSignupFailureAlert = (text) => {
 
     <LoginForm
       v-if="!isSigningUp"
-      @register="register"
+      @register="toggleSignup"
       @show-login-success="toggleLoginSuccessAlert"
       @show-login-failure="(text)=>toggleLoginFailureAlert(text)"
     />
 
     <SignupForm
       v-if="isSigningUp"
-      @show-signup-success="toggleLoginSuccessAlert"
+      @show-signup-success="toggleSignupSuccessAlert"
       @show-signup-failure="(text)=>toggleSignupFailureAlert(text)"
+      @register="toggleSignup"
     />
   </v-container>
 </template>

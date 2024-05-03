@@ -1,17 +1,23 @@
 <script setup>
-import Button from './Button.vue';
 import { useAuthStore } from '@/store/useAuthStore';
-import { ref, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { useTheme } from 'vuetify';
 import { useRouter } from 'vue-router';
 import * as firebase from '../utilities/firebase.js';
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { useRssStore } from '@/store/useRssStore';
+import { getAuth, signOut } from "firebase/auth";
+import Button from './Button.vue';
 
 const auth = getAuth();
 const router = useRouter();
-const rssStore = useRssStore();
-const isAuthorized = ref(false);
+const authStore = useAuthStore();
+const isAuthorized = computed(() => {
+  if (authStore && authStore.authenticated) {
+    return true;
+  } else {
+    if (localStorage.getItem('user')) return true;
+    return false;
+  }
+});
 const isLoggingOut = ref(false);
 
 // TODO: Implement theme change
@@ -23,31 +29,17 @@ const isLoggingOut = ref(false);
 // };
 
 function logout() {
+  if (isLoggingOut.value) return;
+
+  isLoggingOut.value = true;
+
   signOut(auth).then(() => {
-    isLoggingOut.value = true;
-    if (rssStore) {
-      rssStore.clearUserRecord();
-    }
+    authStore.cancelAuthentication();
   }).catch((error) => {
-    console.log(error);
+    console.error(error);
   });
   router.push('/logout');
 };
-
-onMounted(()=>{
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      isAuthorized.value = true;
-      useAuthStore().addAuthentication();
-    } else {
-      isAuthorized.value = false;
-      useAuthStore().cancelAuthentication();
-      if (rssStore) {
-        rssStore.clearUserRecord();
-      }
-    }
-  });
-})
 
 defineEmits(['toggleNavDrawer']);
 </script>
@@ -86,6 +78,3 @@ defineEmits(['toggleNavDrawer']);
     </Button>
   </v-app-bar>
 </template>
-
-<style scoped>
-</style>

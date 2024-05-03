@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../store/useAuthStore'
 
-import AddPost from "../pages/AddPost.vue"
 import AppBlog from '@/pages/AppBlog.vue'
 import AppRss from '@/pages/AppRss.vue'
 import AppAccount from '@/pages/AppAccount.vue'
 import AppExplore from '@/pages/AppExplore.vue'
 import AppHome from '@/pages/AppHome.vue'
 import SigninSignup from '@/pages/SigninSignup.vue'
+import AddPost from "@/pages/AddPost.vue"
 
 const routes = [
   {
@@ -62,7 +62,6 @@ const routes = [
   }
 ]
 
-// 3. Create the router instance and pass the `routes` option
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,

@@ -1,39 +1,40 @@
 <script setup>
 import * as firebase from '../utilities/firebase.js';
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { ref, onMounted } from 'vue';
-import { useLoginStore } from '@/store/useLoginStore.js';
+import { ref } from 'vue';
 import { useAuthStore } from '@/store/useAuthStore.js';
 import { useRouter } from 'vue-router';
 
 const emailRef = ref("");
 const isLoading = ref(false);
-const store = useLoginStore();
 const router = useRouter();
 const authStore = useAuthStore();
 const emit = defineEmits(['showLoginSuccess', 'showLoginFailure']);
+const showSuccessAlert = () => emit('showLoginSuccess')
+const showFailureAlert = (error) => emit('showLoginFailure', error)
 
-function showSuccessAlert() {
-  emit('showLoginSuccess')
-};
+const email = ref('');
+const password = ref('');
+const loginForm = ref(null);
 
-function showFailureAlert(error) {
-  emit('showLoginFailure', error)
+const rules = {
+  required: (v) => !!v || 'Required.',
+  email: (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
 };
 
 function submitLogin() {
-  if (!email.value || !password.value) {
-    return
-  };
+  if (!email.value || !password.value) return;
+  if (isLoading.value) return;
+  // TODO: make sure the form is not submitted if it is not valid
+  if (!loginForm.value.validate()) return;
+
   isLoading.value = true;
   const auth = getAuth();
+
   signInWithEmailAndPassword(auth, email.value, password.value)
     .then((userCredential) => {
       const user = userCredential.user;
-      localStorage.setItem('user', JSON.stringify(user.uid));
-      authStore.setCurrentUserUid(user.uid)
-      authStore.setCurrentUserEmail(user.email)
-      console.log(user);
+      authStore.addAuthentication(JSON.stringify(user.uid), false);
       isLoading.value = false;
       showSuccessAlert();
       setTimeout(() => {
@@ -43,7 +44,6 @@ function submitLogin() {
     .catch((error) => {
       const errorCode = error.code;
       let errorMessage = error.message;
-      console.log(errorCode + errorMessage);
       if (errorCode === "auth/wrong-password") {
         password.value = ""
         errorMessage = "Sorry, your password is incorrect. Please try again."
@@ -56,34 +56,17 @@ function submitLogin() {
       showFailureAlert(errorMessage);
     });
 };
-
-onMounted(() => {store.isLoginOpen ? emailRef.value.focus() : ""});
-
-const email = ref('');
-const password = ref('');
-
-const rules = {
-  required: (v) => !!v || 'Required.',
-  email: (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-};
 </script>
 
 <template>
   <div>
-    <v-container fluid>
-      <v-overlay v-model="isLoading">
-        <v-progress-circular
-          color="blue-grey"
-          model-value="100"
-          class="justify-center align-middle"
-        ></v-progress-circular>
-      </v-overlay>
+    <v-container>
       <v-row justify="center">
         <v-col cols="4">
-          <v-card class="pa-4">
-            <v-card-title class="text-center">Login</v-card-title>
+          <v-card class="pa-4" width="300">
+            <v-card-title class="text-center">Welcome Back</v-card-title>
             <v-card-item>
-              <v-form fast-fail @submit.prevent="submitLogin">
+              <v-form fast-fail ref="loginForm" @submit.prevent="submitLogin">
                 <v-text-field
                   prepend-inner-icon="mdi-email"
                   v-model="email"
@@ -100,7 +83,16 @@ const rules = {
                   type="password"
                 ></v-text-field>
 
-                <v-btn class="mt-2" type="submit" block>Submit</v-btn>
+                <v-btn class="mt-2" type="submit" block color="teal" variant="elevated">
+                  <p>Submit</p>
+                  <v-progress-circular
+                    color="teal"
+                    indeterminate
+                    size="24"
+                    class="ps-10"
+                    v-if="isLoading"
+                  ></v-progress-circular>
+                </v-btn>
                 <v-btn @click="$emit('register')" class="mt-2" block>Register</v-btn>
               </v-form>
             </v-card-item>

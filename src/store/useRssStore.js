@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { useAuthStore } from "./useAuthStore";
 import { ref } from 'vue';
-import axios from 'axios'
+import axios from '@/plugins/axios';
 
 export const useRssStore = defineStore('rss', () => {
   const userUid = ref(null);
@@ -12,13 +12,17 @@ export const useRssStore = defineStore('rss', () => {
 
   console.log('authStore.authenticated');
   console.log(authStore?.authenticated);
-  userUid.value = JSON.parse(localStorage.getItem('user'))
+  if (localStorage.getItem('user') !== undefined) {
+    console.log('localStorage.getItem(user)');
+    console.log(localStorage.getItem('user'));
+    userUid.value = JSON.parse(localStorage.getItem('user'))
+  }
   console.log(userUid.value);
 
-  axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/users/')
+  axios.get('users/')
     .then((response) => {
       userRecordId.value = response.data.filter((user) => user.uid === userUid.value)[0].id;
-      axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/rss-feeds/?user=' + userRecordId.value)
+      axios.get('rss-feeds/?user=' + userRecordId.value)
         .then((response) => {
           if (response.data && response.data.length !== 0) {
             response.data.forEach((feed) => {
@@ -50,7 +54,7 @@ export const useRssStore = defineStore('rss', () => {
 
       if (!userUid.value) return;
 
-      axios.get('https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/users/')
+      axios.get('users/')
         .then((response) => {
           userRecordId.value = response.data.filter((user) => user.uid === userUid.value)[0].id;
         })
@@ -64,7 +68,7 @@ export const useRssStore = defineStore('rss', () => {
     const setUserFeeds = (url) => {
       if (!userRecordId.value) return;
       userFeeds.value = []
-      axios.get(`https://blog-cms-django-abaff6e17c2a.herokuapp.com/api/rss-feeds/?url=${url}&user=${userRecordId.value}`)
+      axios.get(`rss-feeds/?url=${url}&user=${userRecordId.value}`)
         .then((response) => {
           if (response.data && response.data.length !== 0) {
             response.data.forEach((feed) => {
