@@ -58,8 +58,6 @@ defineEmits(['toggleNavDrawer']);
 
     <v-app-bar-title>VibeReads</v-app-bar-title>
 
-    <v-spacer></v-spacer>
-
     <!-- <v-btn icon @click="changeTheme">
       <v-icon :icon="isDarkTheme ? 'mdi-white-balance-sunny' : 'mdi-weather-night'"></v-icon>
     </v-btn> -->

@@ -21,7 +21,7 @@ const formatFeedDate = (date) => {
 <template>
   <v-container>
     <v-row rows="3">
-      <v-col cols="6" v-for="article in articles" :key="article.id">
+      <v-col cols="12" md="6" v-for="article in articles" :key="article.id">
         <a :href="article.link" target="_blank">
           <v-card height="500" class="overflow-auto">
             <v-card-title class="h-96">

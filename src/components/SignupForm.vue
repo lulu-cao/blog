@@ -65,53 +65,51 @@ function submitSignup() {
 </script>
 
 <template>
-  <v-container>
-    <v-row justify="center">
-      <v-col cols="4">
-        <v-card class="pa-4 mix-auto" width="300">
-          <v-card-title class="text-center -ms-5">👋 Register</v-card-title>
-          <v-card-item>
-            <v-form fast-fail ref="signupForm" @submit.prevent="submitSignup">
-              <v-text-field
-                prepend-inner-icon="mdi-email"
-                v-model="email"
-                :rules="[rules.required, rules.email]"
-                label="Username / Email"
-              ></v-text-field>
+  <v-row justify="center">
+    <v-col cols="12" sm="6" lg="4">
+      <v-card class="pa-4 mix-auto">
+        <v-card-title class="text-center -ms-5">👋 Register</v-card-title>
+        <v-card-item>
+          <v-form fast-fail ref="signupForm" @submit.prevent="submitSignup">
+            <v-text-field
+              prepend-inner-icon="mdi-email"
+              v-model="email"
+              :rules="[rules.required, rules.email]"
+              label="Username / Email"
+            ></v-text-field>
 
-              <v-text-field
-                prepend-inner-icon="mdi-lock"
-                v-model="password"
-                :rules="[rules.required, rules.password]"
-                label="Password"
-                type="password"
-              ></v-text-field>
+            <v-text-field
+              prepend-inner-icon="mdi-lock"
+              v-model="password"
+              :rules="[rules.required, rules.password]"
+              label="Password"
+              type="password"
+            ></v-text-field>
 
-              <v-text-field
-                prepend-inner-icon="mdi-lock"
-                v-model="confirmPassword"
-                :rules="[rules.required, rules.confirmPassword]"
-                label="Confirm Password"
-                type="password"
-              ></v-text-field>
+            <v-text-field
+              prepend-inner-icon="mdi-lock"
+              v-model="confirmPassword"
+              :rules="[rules.required, rules.confirmPassword]"
+              label="Confirm Password"
+              type="password"
+            ></v-text-field>
 
-              <v-btn class="mt-2" type="submit" block color="teal" variant="elevated">
-                <p>Submit</p>
-                <v-progress-circular
-                  color="teal"
-                  indeterminate
-                  size="24"
-                  class="ps-10"
-                  v-if="isLoading"
-                ></v-progress-circular>
-              </v-btn>
-              <v-btn @click="$emit('register')" class="mt-2" block>Sign In</v-btn>
-            </v-form>
-          </v-card-item>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+            <v-btn class="mt-2" type="submit" block color="teal" variant="elevated">
+              <p>Submit</p>
+              <v-progress-circular
+                color="teal"
+                indeterminate
+                size="24"
+                class="ps-10"
+                v-if="isLoading"
+              ></v-progress-circular>
+            </v-btn>
+            <v-btn @click="$emit('register')" class="mt-2" block>Sign In</v-btn>
+          </v-form>
+        </v-card-item>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 

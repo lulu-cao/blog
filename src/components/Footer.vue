@@ -15,22 +15,21 @@ const links = [{
 </script>
 
 <template>
-  <v-footer class="bg-teal sm:max-h-40 md:max-h-32">
-    <v-img
-        gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"
-      ></v-img>
+  <v-footer class="bg-teal sm:max-h-40 md:max-h-32" app>
     <v-row justify="center" no-gutters>
-      <v-btn
-        v-for="link in links"
-        :key="link"
-        class="mx-2"
-        color="white"
-        rounded="xl"
-        variant="text"
-      >
-        <a :href="link.link">{{ link.name }}</a>
-      </v-btn>
-      <v-col class="text-center mt-4" cols="12">
+      <v-col class="text-center" cols="12">
+        <v-btn
+          v-for="link in links"
+          :key="link"
+          class="mx-2"
+          color="white"
+          rounded="xl"
+          variant="text"
+        >
+          <a :href="link.link">{{ link.name }}</a>
+        </v-btn>
+      </v-col>
+      <v-col class="text-center" cols="12">
         {{ new Date().getFullYear() }} @ <strong>Lulu Cao</strong>
       </v-col>
     </v-row>
