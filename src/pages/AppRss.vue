@@ -71,6 +71,7 @@ const isFilterFormOpen = ref(false);
 const isStartingFilters = ref(false);
 const isFiltered = ref(false);
 const isFilterSuccessAlertOpen = ref(false);
+const isFilterClearAlertOpen = ref(false);
 
 const title = ref('');
 const description = ref('');
@@ -102,10 +103,32 @@ const formatFilterDate = () => {
     return '';
   }
 
+  if (!beforeAfter.value) {
+    beforeAfter.value = 'Before';
+  }
+
   if (!year.value) year.value = new Date().getFullYear();
-  if (!month.value) month.value = new Date().getMonth() + 1;
-  if (!day.value) day.value = new Date().getDate();
-  if (!hour.value) hour.value = new Date().getHours();
+  if (!month.value) {
+    if (beforeAfter.value === 'Before') {
+      month.value = 1;
+    } else {
+      month.value = 12;
+    }
+  }
+  if (!day.value) {
+    if (beforeAfter.value === 'Before') {
+      day.value = 1;
+    } else {
+      day.value = 28;
+    }
+  }
+  if (!hour.value) {
+    if (beforeAfter.value === 'Before') {
+      hour.value = 0;
+    } else {
+      hour.value = 12;
+    }
+  }
 
   let hourAdjusted = parseInt(hour.value);
   if (!amPm.value) {
@@ -132,62 +155,60 @@ const formatFeedDate = (date) => {
 }
 
 const filterFeeds = () => {
-  if (!filterForm.value.validate()) {
-    return
-  }
-  if (isStartingFilters.value) {
-    return
-  }
-  published.value = formatFilterDate();
+  if (!filterForm.value.validate()) return
+  if (isStartingFilters.value) return
+
   isStartingFilters.value = true;
+  published.value = formatFilterDate();
+
+  // clear filters
   if (!title.value && !description.value && !published.value) {
     isStartingFilters.value = false;
     isFiltered.value = false;
+    isFilterClearAlertOpen.value = true;
+    setTimeout(() => {
+      if (isFilterSuccessAlertOpen.value) {
+        isFilterSuccessAlertOpen.value = false;
+      }
+    }, 1000);
+    setTimeout(() => {
+      isFilterClearAlertOpen.value = false;
+    }, 3000);
     return
   }
 
   filteredFeeds.value = userFeeds.value.filter((feed) => {
-    let match = true; // Start assuming a feed matches
+    let match = true; // Start by assuming a feed matches
 
     if (title.value && feed.title) {
-      match = match && feed.title.toLowerCase().includes(title.value.toLowerCase());
+      match = match && feed.title.trim().toLowerCase().includes(title.value.trim().toLowerCase());
     }
-    if (description.value && feed.description) {
-      match = match && feed.description.toLowerCase().includes(description.value.toLowerCase());
+
+    if (description.value && feed.summary) {
+      match = match && feed.summary.trim().toLowerCase().includes(description.value.trim().toLowerCase());
     }
+
     if (published.value && feed.published) {
       const feedDate = new Date(feed.published);
       const userDate = new Date(published.value);
-
-      if (beforeAfter.value === 'before') {
+      if (beforeAfter.value === 'Before') {
         match = match && feedDate < userDate;
-      } else if (beforeAfter.value === 'after') {
-        match = match && feedDate > userDate;
       } else {
-        match = match && feedDate.toISOString().split('T')[0] === userDate.toISOString().split('T')[0];
+        match = match && feedDate > userDate;
       }
+    } else if (!feed.published) {
+      match = false;
     }
 
     return match;
   });
 
   isStartingFilters.value = false;
-
-  title.value = '';
-  description.value = '';
-  published.value = '';
-  beforeAfter.value = '';
-  year.value = '';
-  month.value = '';
-  day.value = '';
-  hour.value = '';
-  amPm.value = '';
-
   isFiltered.value = true;
   isFilterSuccessAlertOpen.value = true;
   setTimeout(() => {
     isFilterSuccessAlertOpen.value = false;
-  }, 5000);
+  }, 3000);
 }
 
 // TODO: replace manual date fields with v-date-picker
@@ -215,6 +236,13 @@ const filterFeeds = () => {
       v-if="isFilterSuccessAlertOpen"
       title="Success"
       text="Your feeds have been filtered successfully."
+      type="success"
+      icon="$success"
+    />
+    <Alert
+      v-if="isFilterClearAlertOpen"
+      title="Success"
+      text="Your filters have been cleared successfully."
       type="success"
       icon="$success"
     />
@@ -388,8 +416,10 @@ const filterFeeds = () => {
             <a :href="article.link" target="_blank">{{ article.title }}</a>
           </v-card-title>
           <v-card-subtitle v-if="article.published">{{ formatFeedDate(article.published) }}</v-card-subtitle>
+          <v-card-text v-if="article.image">
+            <v-img :src="article.image" height="200"></v-img>
+          </v-card-text>
           <v-card-text v-html="article.summary"></v-card-text>
-          <!-- <div class="fade-effect"></div> -->
         </v-card>
       </v-col>
       <v-col cols="12" v-if="filteredFeeds.length === 0">
