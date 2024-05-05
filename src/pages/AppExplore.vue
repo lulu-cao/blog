@@ -44,6 +44,7 @@ const formatFeedDate = (date) => {
   hyphens: auto;
 }
 
+/* TODO: add fade effect to bottom of cards */
 .fade-effect {
   width: 100%;
   height: 100px;

@@ -1,7 +1,7 @@
 <script setup>
-import Alert from '@/components/Alert.vue';
-import { onMounted, ref, computed } from 'vue'
 import { useAuthStore } from '@/store/useAuthStore';
+import { onMounted, ref, computed } from 'vue'
+import Alert from '@/components/Alert.vue';
 import axios from '@/plugins/axios';
 
 const authStore = useAuthStore();
@@ -11,73 +11,66 @@ const userFeeds = computed(() => {
   }
 });
 const filteredFeeds = ref([]);
-const filterForm = ref(null);
-const isStartingFilters = ref(false);
-const isFilterSuccessAlertOpen = ref(false);
 
 onMounted(() => {
   filterFeeds.value = userFeeds.value;
 });
 
-const isAddingFeed = ref(false);
-const isFiltering = ref(false);
-const filtered = ref(false);
-
-const toggleAddFeed = () => {
-  if (isStartingFilters.value) return
-  if (!isAddingFeed.value) {
-    isFiltering.value = false;
-  }
-  isAddingFeed.value = !isAddingFeed.value;
-}
-
-const toggleFilter = () => {
-  if (isFeedBeingSent.value) {
-    return
-  }
-  if (!isFiltering.value) {
-    isAddingFeed.value = false;
-  }
-  feedUrl.value = '';
-  isFiltering.value = !isFiltering.value;
-}
-
-const feedUrl = ref('');
+const isFeedFormOpen = ref(false);
+const newFeedUrl = ref('');
 const isFeedBeingSent = ref(false);
-const isFeedCacheSuccess = ref(false);
-const isFeedCacheError = ref(false);
-const feedCacheError = ref('');
+const isFeedCacheSuccessAlertOpen = ref(false);
+const isFeedCacheErrorAlertOpen = ref(false);
+const feedCacheErrorText = ref('');
 
 const addFeed = () => {
-  if (!feedUrl.value) {
-    return
-  }
+  if (!newFeedUrl.value) return
+  if (isFeedBeingSent.value) return
+
   isFeedBeingSent.value = true;
 
   axios.post('cache-rss-feed/', {
-    url: feedUrl.value,
+    url: newFeedUrl.value,
     user: authStore.userDjangoId,
   }).then(() => {
-    isFeedBeingSent.value = false;
-    isFeedCacheSuccess.value = true;
+    isFeedCacheSuccessAlertOpen.value = true;
     toggleAddFeed();
     setTimeout(() => {
+      isFeedBeingSent.value = false;
       window.location.reload();
     }, 3500);
-
-    setTimeout(() => {
-      isFeedCacheSuccess.value = false;
-    }, 5000);
   }).catch((error) => {
-    feedCacheError.value = error.response.data.error;
+    feedCacheErrorText.value = error.response.data.error;
     isFeedBeingSent.value = false;
-    isFeedCacheError.value = true;
+    isFeedCacheErrorAlertOpen.value = true;
 
     setTimeout(() => {
-      isFeedCacheError.value = false;
+      isFeedCacheErrorAlertOpen.value = false;
     }, 5000);
   });
 }
+
+const toggleAddFeed = () => {
+  if (isStartingFilters.value) return
+  if (!isFeedFormOpen.value) {
+    isFilterFormOpen.value = false;
+  }
+  isFeedFormOpen.value = !isFeedFormOpen.value;
+}
+
+const toggleFilter = () => {
+  if (isFeedBeingSent.value) return
+  if (!isFilterFormOpen.value) {
+    isFeedFormOpen.value = false;
+  }
+  isFilterFormOpen.value = !isFilterFormOpen.value;
+}
+
+const filterForm = ref(null);
+const isFilterFormOpen = ref(false);
+const isStartingFilters = ref(false);
+const isFiltered = ref(false);
+const isFilterSuccessAlertOpen = ref(false);
 
 const title = ref('');
 const description = ref('');
@@ -133,6 +126,11 @@ const formatFilterDate = () => {
   return `${year.value}-${paddedMonth}-${paddedDay}T${paddedHour}:04:00.001000Z`;
 }
 
+const formatFeedDate = (date) => {
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+  return new Date(date).toLocaleDateString('en-US', options).replace(',', '');
+}
+
 const filterFeeds = () => {
   if (!filterForm.value.validate()) {
     return
@@ -144,7 +142,7 @@ const filterFeeds = () => {
   isStartingFilters.value = true;
   if (!title.value && !description.value && !published.value) {
     isStartingFilters.value = false;
-    filtered.value = false;
+    isFiltered.value = false;
     return
   }
 
@@ -185,16 +183,11 @@ const filterFeeds = () => {
   hour.value = '';
   amPm.value = '';
 
-  filtered.value = true;
+  isFiltered.value = true;
   isFilterSuccessAlertOpen.value = true;
   setTimeout(() => {
     isFilterSuccessAlertOpen.value = false;
   }, 5000);
-}
-
-const formatFeedDate = (date) => {
-  const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
-  return new Date(date).toLocaleDateString('en-US', options).replace(',', '');
 }
 
 // TODO: replace manual date fields with v-date-picker
@@ -205,14 +198,14 @@ const formatFeedDate = (date) => {
 <template>
   <v-container>
     <Alert
-      v-if="isFeedCacheError"
+      v-if="isFeedCacheErrorAlertOpen"
       title="Failure"
-      :text="feedCacheError"
+      :text="feedCacheErrorText"
       type="error"
       icon="$error"
     />
     <Alert
-      v-if="isFeedCacheSuccess"
+      v-if="isFeedCacheSuccessAlertOpen"
       title="Success"
       text="Your feed url has been added successfully. We will reload the page to apply changes."
       type="success"
@@ -233,15 +226,15 @@ const formatFeedDate = (date) => {
       <v-spacer></v-spacer>
       <v-btn @click.prevent="toggleFilter">Filter</v-btn>
     </v-toolbar>
-    <v-card v-if="isAddingFeed" rounded="0" class="mb-6">
+    <v-card v-if="isFeedFormOpen" rounded="0" class="mb-6">
       <v-form
         @submit.prevent="addFeed"
         fast-fail
       >
         <v-text-field
-          v-model="feedUrl"
+          v-model="newFeedUrl"
           label="Feed URL"
-          :rules="[() => !!feedUrl || 'Required']"
+          :rules="[() => !!newFeedUrl || 'Required']"
           outlined
           clearable
         ></v-text-field>
@@ -257,7 +250,7 @@ const formatFeedDate = (date) => {
         </div>
       </v-form>
     </v-card>
-    <v-card v-if="isFiltering" class="mb-6">
+    <v-card v-if="isFilterFormOpen" class="mb-6">
       <v-form
         @submit.prevent="filterFeeds"
         fast-fail
@@ -321,6 +314,7 @@ const formatFeedDate = (date) => {
             :rules="[dateRules.allOrNone]"
           ></v-select>
         </v-row>
+        <!-- TODO: replace manual date fields with v-date-picker -->
         <!-- <v-menu
           ref="menu"
           v-model="menu"
@@ -373,18 +367,21 @@ const formatFeedDate = (date) => {
         </div>
       </v-form>
     </v-card>
-    <v-row rows="3" v-if="!filtered">
+    <v-row rows="3" v-if="!isFiltered">
       <v-col cols="12" md="6" v-for="article in userFeeds" :key="article.id">
         <v-card height="500" class="overflow-auto">
-          <v-card-title>
+          <v-card-title class="title-wrapper">
             <a :href="article.link" target="_blank">{{ article.title }}</a>
           </v-card-title>
           <v-card-subtitle v-if="article.published">{{ formatFeedDate(article.published) }}</v-card-subtitle>
+          <v-card-text v-if="article.image">
+            <v-img :src="article.image" height="200"></v-img>
+          </v-card-text>
           <v-card-text v-html="article.summary"></v-card-text>
         </v-card>
       </v-col>
     </v-row>
-    <v-row rows="3" v-if="filtered">
+    <v-row rows="3" v-if="isFiltered">
       <v-col cols="12" md="6" v-for="article in filteredFeeds" :key="article.id">
         <v-card height="500" class="overflow-auto">
           <v-card-title>
@@ -405,6 +402,12 @@ const formatFeedDate = (date) => {
 </template>
 
 <style scoped>
+.title-wrapper {
+  white-space: normal;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
 /* TODO: add fade effect to bottom of cards */
 .fade-effect {
   position: absolute;
