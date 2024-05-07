@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "copyfiles 404.html dist/",
     "serve": "vite preview",
     "deploy": "sh deploy.sh"
   },
@@ -21,6 +22,7 @@
   "devDependencies": {
     "@mdi/font": "^7.4.47",
     "autoprefixer": "^10.4.13",
+    "copyfiles": "^2.4.1",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.2.4"
   }
