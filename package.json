@@ -8,7 +8,7 @@
     "serve": "vite preview",
     "deploy": "sh deploy.sh",
     "test": "vitest --environment jsdom",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage --environment jsdom"
   },
   "dependencies": {
     "@testing-library/vue": "^8.0.3",

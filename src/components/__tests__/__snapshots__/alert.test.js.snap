@@ -1,0 +1,5 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Alert component > renders the correct props 1`] = `"<v-alert text="An error occurred" icon="$error" title="Failure" type="error" close-icon="$close"></v-alert>"`;
+
+exports[`Alert component > renders the correct props for error 1`] = `"<v-alert text="An error occurred" icon="$error" title="Failure" type="error" close-icon="$close"></v-alert>"`;
